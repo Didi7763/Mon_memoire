@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MaterielController;
 
 Route::get('//', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
+Route::get('/actifss', [MaterielController::class, 'actifss']);
 
 Route::get('/', function () {
     return view('welcome');
