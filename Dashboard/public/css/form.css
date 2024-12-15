@@ -1,0 +1,65 @@
+.card-form{
+    width: 90%;
+    background-color: white;
+    margin: 3dvh 3dvw;
+    border-radius: 0.5rem;
+    padding: 1dvh 1.5dvw;
+    display: flex;
+    flex-direction: column;
+    gap: 2dvh;
+    height: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.head-form{
+    display: flex;
+}
+.title-form{
+    flex: 1 1 90%;
+}
+.title-form h2{
+font-family: 'Nerko-One' sans-serif;
+font-size: 2.5dvw;
+}
+.icon-back{
+    flex: 1 2 10%;
+    text-align: right;
+}
+.icon-back i{
+    font-size: 2dvw;
+}
+.icon-back i:hover{
+    color: red;
+    transition: 0.25s;
+}
+.content-form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5dvh;
+}
+.form-control, .form-select{
+    background-color: rgba(16, 197, 255, 0.03);
+    font-size: 1.5dvw;
+    font-family: 'Quicksand', sans-serif;
+}
+.content-form label{
+    font-family: 'Quicksand', sans-serif;
+    margin-left: 0.2dvw;
+    font-size: 1.5dvw;
+    font-weight:500;
+}
+.button-form{
+    display: flex;
+    justify-content: center;
+    margin-top: 2dvh;
+}
+.button-form button{
+    font-size: 1.5dvw;
+    width: 20%;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+    transition: 0.5s;
+}
+.button-form button:hover{
+    background-color: rgb(5, 137, 5);
+    transition: 0.5s;
+}

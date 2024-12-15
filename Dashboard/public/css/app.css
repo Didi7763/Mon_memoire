@@ -71,17 +71,21 @@ ul ul li a.dropdown-item.active{
 
 .rigth-panel{
     margin-left:20%;
+    width: 80dvw;
+    display: flex;
+    flex-direction: column;
 }
-
-.navbar{
+.navbar-part{
     background-color: white;
     height: 10dvh;
-
 }
+
+
 #header{
     display: flex;
     flex-direction: row;
     width: 100%;
+
 }
 .first-header{
     flex: 1 1 10%;
@@ -180,6 +184,9 @@ ul ul li a.dropdown-item.active{
     margin-right: 1vw;
 }
 #contentpage{
+    max-height: 90dvh; /* Ajustez la hauteur selon vos besoins */
     height: 90dvh;
-    overflow: auto;
+    overflow-y: auto; /* Ajoute la barre de défilement verticale lorsque le contenu dépasse la hauteur maximale */
+    padding-right: 10px; /* Pour ajouter un peu d'espace autour du défilement */
+
 }

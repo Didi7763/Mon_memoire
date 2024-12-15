@@ -26,33 +26,7 @@
         <!-- Sidebar -->
         <div class="w3-sidebar w3-bar-block" id="sidebar">
             <h3 class="w3-bar-item">CARENA</h3>
-                <ul>
-                    <li> <a href="#tableau de bord" class="active"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
-                    <li class="has-submenu"><a href="#actifs"><i class="bi bi-display"></i>Actifs</a>
-                        <ul class="submenu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i>Actif matériel</a></li>
-                        </ul>
-                    </li>
-                    <li class="has-submenu"><a href="#utilisateur"><i class="bi bi-person"></i>Utilisateur</a>
-                        <ul class="submenu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge"></i>Employé</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i>Service</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#fournisseur"><i class="bi bi-truck"></i>Fournisseur</a></li>
-                    <li><a href="#attribution"><i class="bi bi-award"></i>Attribution</a></li>
-                    <li><a href="#maintenance"><i class="bi bi-tools"></i>Maintenance</a></li>
-                    <li><a href="#historique"><i class="bi bi-clock-history"></i>Historique</a></li>
-                    <li class="has-submenu"><a href="#compte"><i class="bi bi-person-circle"></i>Compte</a>
-                        <ul class="submenu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                @yield('sidebar')
         </div>
 
         <!-- rigth panel (le coté droit) -->
