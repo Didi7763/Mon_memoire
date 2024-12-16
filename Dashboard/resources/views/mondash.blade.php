@@ -1,34 +1,67 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="row">
-    <div class="col-2 bg-light">
-        <nav class="nav flex-column">
-            <a class="nav-link" href="{{ route('mondash') }}">Tableau de bord</a>
-            <a class="nav-link active" href="{{ route('actifs') }}">Actifs</a>
-            <a class="nav-link" href="{{ route('utilisateurs') }}">Utilisateurs</a>
-        </nav>
+@section('title', 'Mondash')
+
+@section('main-content')
+<div class="container mt-5">
+    <h1 class="text-center">Dashboard</h1>
+
+    <!-- Section des indicateurs principaux -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Utilisateurs</h5>
+                    <p class="card-text">1</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Actifs</h5>
+                    <p class="card-text">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Matériels</h5>
+                    <p class="card-text">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Logiciels</h5>
+                    <p class="card-text">0</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-10">
-        <h1>Gestion des Actifs</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Libellé</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Exemple d'Actif</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary">Modifier</button>
-                        <button class="btn btn-sm btn-danger">Supprimer</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn btn-success">Ajouter un Actif</button>
+
+    <!-- Section des tops -->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <h5>Top 5 Matériels</h5>
+            <ul class="list-group">
+                <li class="list-group-item">Aucun matériel trouvé.</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h5>Top 5 Données</h5>
+            <ul class="list-group">
+                <li class="list-group-item">Aucune donnée trouvée.</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h5>Top 5 Logiciels</h5>
+            <ul class="list-group">
+                <li class="list-group-item">Aucun logiciel trouvé.</li>
+            </ul>
+        </div>
     </div>
 </div>
 @endsection

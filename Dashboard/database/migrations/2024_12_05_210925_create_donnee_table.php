@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('donnee', function (Blueprint $table) {
-            $table->id();
+            $table->id('IdAct');
             $table->string('FormatData');
             $table->string('SourceData');
-            $table->string('ResponsableData');
+            $table->string('ResponsabeData');
             $table->string('NivSensData');
             $table->string('StatData');
-            $table->string('DataRecpData');
-            $table->string('DatMajData');
+            $table->date('DatRecpData');
+            $table->date('DatMajData');
             $table->timestamps();
         });
     }

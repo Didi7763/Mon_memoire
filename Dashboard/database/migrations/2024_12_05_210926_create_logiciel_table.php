@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('logiciel', function (Blueprint $table) {
-            $table->id();
+            $table->id('IdAct');
             $table->string('VersionLog');
-            $table->string('TypLicog');
-            $table->string('NbrLicLog');
-            $table->string('NbrMinLicLog');
-            $table->string('CleLog');
-            $table->string('DatAchLog');
-            $table->string('DatExpLog');
+            $table->string('TypLicLog');
+            $table->integer('NbrLicLog');
+            $table->integer('NbrMinLicLog');
+            $table->string('CleLicLog');
+            $table->date('DatAchLog');
+            $table->date('DatExpLog');
+            $table->unsignedBigInteger('IdFour');
+            $table->foreign('IdFour')->references('IdFour')->on('fournisseur');
             $table->timestamps();
         });
     }

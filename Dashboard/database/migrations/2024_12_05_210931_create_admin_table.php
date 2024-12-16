@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('admin', function (Blueprint $table) {
-            $table->id();
-            $table->string('NumAdmin');
+            $table->string('NumAdmin')->primary();
             $table->string('NomCompAdmin');
             $table->string('NomComptUser');
-            $table->string('MotpassUser');
+            $table->string('MotPassUser');
             $table->string('StatAdmin');
             $table->string('ListAccApp');
-            $table->string('DatCreationCompt');
+            $table->date('DatCreationCompt');
             $table->string('ListPermApp');
+            $table->string('UrlPhotoAdmin');
             $table->timestamps();
         });
     }

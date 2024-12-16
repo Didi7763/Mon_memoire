@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('actif', function (Blueprint $table) {
-            $table->id();
-            $table->string('FaireObjet');
-            $table->string('IdAct');
+            $table->id('IdAct');
             $table->string('NomAct');
             $table->string('ComtAct');
             $table->timestamps();

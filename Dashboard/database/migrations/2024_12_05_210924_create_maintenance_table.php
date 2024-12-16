@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('maintenance', function (Blueprint $table) {
-            $table->id();
-            $table->string('NumMaint');
+            $table->id('NumMaint');
             $table->string('DesMaint');
             $table->string('TypMaint');
-            $table->string('DatMaint');
+            $table->date('DatMaint');
             $table->string('NomTechMaint');
-            $table->string('CoutMaint');
-            $table->string('DatProcMaint');
+            $table->decimal('CoutMaint');
+            $table->date('DatProchMaint');
             $table->string('ComtMaint');
+            $table->unsignedBigInteger('IdAct');
+            $table->foreign('IdAct')->references('IdAct')->on('actif');
             $table->timestamps();
         });
     }

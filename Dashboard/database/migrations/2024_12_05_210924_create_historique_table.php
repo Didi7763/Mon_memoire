@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('historique', function (Blueprint $table) {
-            $table->id();
-            $table->string('NumHist');
-            $table->string('DataAction');
+            $table->id('NumHist');
+            $table->date('DatAction');
             $table->string('DesAction');
+            $table->unsignedBigInteger('IdAct');
+            $table->foreign('IdAct')->references('IdAct')->on('actif');
             $table->timestamps();
         });
     }

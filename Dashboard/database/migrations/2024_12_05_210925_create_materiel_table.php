@@ -12,14 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('materiel', function (Blueprint $table) {
-            $table->id();
+            $table->id('IdAct');
             $table->string('MarqMat');
-            $table->string('ModlMat');
+            $table->string('ModMarq');
             $table->string('NumSerieMat');
-            $table->string('DataAcqMat');
+            $table->date('DatAcqMat');
             $table->string('StatMat');
-            $table->string('QteMat');
-            $table->string('DureVieMat');
+            $table->integer('QteMat');
+            $table->integer('DureVieMat');
+            $table->unsignedBigInteger('IdFour');
+            $table->unsignedBigInteger('RefCatMat');
+            $table->foreign('IdFour')->references('IdFour')->on('fournisseur');
+            $table->foreign('RefCatMat')->references('RefCatMat')->on('categorie_materiel');
             $table->timestamps();
         });
     }

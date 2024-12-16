@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employe', function (Blueprint $table) {
-            $table->id();
-            $table->string('FoncEmp');
+            $table->string('CodeUser')->primary();
+            $table->string('FonctEmp');
             $table->string('StatEmp');
             $table->string('ListActif');
+            $table->string('CodeUser')->nullable();
+            $table->foreign('CodeUser')->references('CodeUser')->on('utilisateur');
             $table->timestamps();
         });
     }

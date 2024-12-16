@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categorie_materiel', function (Blueprint $table) {
-            $table->id();
-            $table->string('RefCatMat');
-            $table->string('NonCatMat');
-            $table->string('QteStockMat');
-            $table->string('QteMinStockMat');
+            $table->id('RefCatMat');
+            $table->string('NomCatMat');
+            $table->integer('QteStockMat');
+            $table->integer('QteMinStockMat');
             $table->string('NoteCatMat');
             $table->timestamps();
         });

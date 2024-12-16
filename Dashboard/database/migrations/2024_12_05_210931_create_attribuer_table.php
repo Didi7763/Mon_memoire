@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('attribuer', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('Actif_id');
-            $table->unsignedBigInteger('Attribuer_id');
+            $table->unsignedBigInteger('IdAct');
+            $table->string('CodeUser1');
+            $table->string('NumAdmin');
+            $table->date('DatAttAct');
+            $table->foreign('IdAct')->references('IdAct')->on('actif');
+            $table->foreign('CodeUser1')->references('CodeUser1')->on('employe');
+            $table->foreign('NumAdmin')->references('NumAdmin')->on('admin');
             $table->timestamps();
-
-            // Ajoutez vos clés étrangères, si nécessaire
-            $table->foreign('Actif_id')->references('id')->on('actif')->onDelete('cascade');
-            $table->foreign('Attribuer_id')->references('id')->on('attributions')->onDelete('cascade');
         });
     }
 
