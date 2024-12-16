@@ -133,7 +133,7 @@ Actifs Matériels
                 </div>
                 <div class="col">
                   <label for="commentaire">Avez-vous un commentaire sur le matériel?</label>
-                  <textarea name="comment_mat" id="ComtMat" class="form-control" rows="1" cols="50" placeholder="Écrivez votre commentaire ici..." name="commentaire_mat"></textarea>
+                  <textarea name="comment_mat" id="ComtAct" class="form-control" rows="1" cols="50" placeholder="Écrivez votre commentaire ici..." name="commentaire_mat"></textarea>
                 </div>
               </div>
 
