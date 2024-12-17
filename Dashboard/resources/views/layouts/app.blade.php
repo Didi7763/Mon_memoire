@@ -22,46 +22,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @yield('custom-css-add')
 
-<<<<<<< HEAD
-    <body>
-        <!-- Sidebar -->
-        <div class="w3-sidebar w3-bar-block" id="sidebar">
-            <h3 class="w3-bar-item">CARENA</h3>
-                @yield('sidebar')
-        </div>
 
-        <!-- rigth panel (le coté droit) -->
-        <div class="rigth-panel">
-
-            <!--navbar (barre horizontale)-->
-            <nav class="navbar">
-                <div class="w3-container" id="header">
-
-                    <div class="first-header">
-                        <i class="bi bi-list"></i>
-                    </div>
-                    <div class="second-header">
-                        <div class="sh-search">
-                            <form action="">
-                                <input type="text" placeholder="Rechercher.." name="search">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                              </form>
-                        </div>
-                        <div class="sh-dark-mode">
-                            <i class="bi bi-brightness-high-fill"></i>
-                        </div>
-                        <div class="sh-notification">
-                            <i class="bi bi-bell-fill"></i>
-                            <span class="counter">1</span>
-                        </div>
-                        <div class="sh-avatar">
-                            <!--le fichier doit etre en format png-->
-                            <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar">
-                            <i class="bi bi-circle-fill"></i>
-                            <i class="bi bi-caret-down-fill"></i>
-                        </div>
-                    </div>
-=======
     <title>@yield('title', 'Application')</title>
 </head>
 <body>
@@ -99,7 +60,6 @@
             </li>
         </ul>
     </div>
->>>>>>> 2ba8746 ([ADD] dashboard interface)
 
     <!-- Right Panel -->
     <div class="rigth-panel">
