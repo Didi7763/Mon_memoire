@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin', function (Blueprint $table) {
-            $table->string('NumAdmin')->primary();
+        Schema::create('admins', function (Blueprint $table) {
+            $table->id('NumAdmin');
             $table->string('NomCompAdmin');
             $table->string('NomComptUser');
             $table->string('MotPassUser');
             $table->string('StatAdmin');
-            $table->string('ListAccApp');
+            $table->text('ListAccApp');
             $table->date('DatCreationCompt');
-            $table->string('ListPermApp');
-            $table->string('UrlPhotoAdmin');
+            $table->text('ListPermApp');
+            $table->string('UrlPhotoAdmin')->nullable();
             $table->timestamps();
         });
     }

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('actif', function (Blueprint $table) {
+        Schema::create('actifs', function (Blueprint $table) {
             $table->id('IdAct');
             $table->string('NomAct');
-            $table->string('ComtAct');
+            $table->text('ComtAct')->nullable();
             $table->timestamps();
         });
     }

@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('attribuer', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('IdAct');
-            $table->string('CodeUser1');
-            $table->string('NumAdmin');
+            $table->string('CodeUser');
+            $table->unsignedBigInteger('NumAdmin');
             $table->date('DatAttAct');
-            $table->foreign('IdAct')->references('IdAct')->on('actif');
-            $table->foreign('CodeUser1')->references('CodeUser1')->on('employe');
-            $table->foreign('NumAdmin')->references('NumAdmin')->on('admin');
             $table->timestamps();
+        
+            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
+            $table->foreign('CodeUser')->references('CodeUser')->on('utilisateurs')->onDelete('cascade');
+            $table->foreign('NumAdmin')->references('NumAdmin')->on('admins')->onDelete('cascade');
         });
     }
 

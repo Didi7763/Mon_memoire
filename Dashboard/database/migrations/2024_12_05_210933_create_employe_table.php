@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employe', function (Blueprint $table) {
-            $table->string('CodeUser')->primary();
+        Schema::create('employes', function (Blueprint $table) {
+            $table->id();
+            $table->string('CodeUser1');
             $table->string('FonctEmp');
             $table->string('StatEmp');
-            $table->string('ListActif');
-            $table->string('CodeUser')->nullable();
-            $table->foreign('CodeUser')->references('CodeUser')->on('utilisateur');
+            $table->text('ListActif');
+            $table->string('CodeUser');
             $table->timestamps();
+        
+            $table->foreign('CodeUser')->references('CodeUser')->on('utilisateurs')->onDelete('cascade');
         });
     }
 

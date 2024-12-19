@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materiel', function (Blueprint $table) {
-            $table->id('IdAct');
+        Schema::create('materiels', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('IdAct');
             $table->string('MarqMat');
             $table->string('ModMarq');
             $table->string('NumSerieMat');
@@ -22,9 +23,11 @@ return new class extends Migration
             $table->integer('DureVieMat');
             $table->unsignedBigInteger('IdFour');
             $table->unsignedBigInteger('RefCatMat');
-            $table->foreign('IdFour')->references('IdFour')->on('fournisseur');
-            $table->foreign('RefCatMat')->references('RefCatMat')->on('categorie_materiel');
             $table->timestamps();
+        
+            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
+            $table->foreign('IdFour')->references('IdFour')->on('fournisseurs')->onDelete('cascade');
+            $table->foreign('RefCatMat')->references('RefCatMat')->on('categorie_materiels')->onDelete('cascade');
         });
     }
 

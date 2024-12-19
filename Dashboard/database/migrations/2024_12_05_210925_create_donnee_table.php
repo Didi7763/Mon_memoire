@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('donnee', function (Blueprint $table) {
-            $table->id('IdAct');
+        Schema::create('donnees', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('IdAct');
             $table->string('FormatData');
             $table->string('SourceData');
             $table->string('ResponsabeData');
@@ -21,6 +22,8 @@ return new class extends Migration
             $table->date('DatRecpData');
             $table->date('DatMajData');
             $table->timestamps();
+        
+            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
         });
     }
 

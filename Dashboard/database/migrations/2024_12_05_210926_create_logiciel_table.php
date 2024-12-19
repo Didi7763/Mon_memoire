@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logiciel', function (Blueprint $table) {
-            $table->id('IdAct');
+        Schema::create('logiciels', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('IdAct');
             $table->string('VersionLog');
             $table->string('TypLicLog');
             $table->integer('NbrLicLog');
@@ -21,8 +22,10 @@ return new class extends Migration
             $table->date('DatAchLog');
             $table->date('DatExpLog');
             $table->unsignedBigInteger('IdFour');
-            $table->foreign('IdFour')->references('IdFour')->on('fournisseur');
             $table->timestamps();
+        
+            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
+            $table->foreign('IdFour')->references('IdFour')->on('fournisseurs')->onDelete('cascade');
         });
     }
 

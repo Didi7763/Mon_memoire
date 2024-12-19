@@ -10,9 +10,11 @@ Route::get('//', [DashboardController::class, 'index'])->name('dashboard');
 // Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
-Route::get('/actifss', [MaterielController::class, 'actifss']);
+Route::get('/actif-materiel', [MaterielController::class, 'index'])->name('actif-materiel');
 
-Route::get('/mondash', [MondashController::class, 'index'])->name('mondash');
+Route::get('/mondash', [DashboardController::class, 'index'])->name('mondash');
+
+Route::resource('materiels', controller: MaterielController::class);
 
 
 Route::get('/actif-materiel', function () {
@@ -22,6 +24,8 @@ Route::get('/actif-materiel', function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::middleware([
     'auth:sanctum',
@@ -36,3 +40,9 @@ Route::middleware([
 //     return view('dashboard');
 // })->name('dashboard');
 
+
+// Afficher le formulaire d'ajout d'un actif
+Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
+
+// Ajouter un actif
+Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categorie_materiel', function (Blueprint $table) {
+        Schema::create('categorie_materiels', function (Blueprint $table) {
             $table->id('RefCatMat');
             $table->string('NomCatMat');
             $table->integer('QteStockMat');
             $table->integer('QteMinStockMat');
-            $table->string('NoteCatMat');
+            $table->text('NoteCatMat')->nullable();
             $table->timestamps();
         });
+        
     }
 
     /**

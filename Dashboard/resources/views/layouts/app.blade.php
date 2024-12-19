@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @yield('custom-css-add')
 
-
     <title>@yield('title', 'Application')</title>
 </head>
 <body>
@@ -30,32 +29,32 @@
     <div class="w3-sidebar w3-bar-block" id="sidebar">
         <h3 class="w3-bar-item">CARENA</h3>
         <ul>
-            <li><a href="{{ route('mondash') }}" class="active"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
+            <li><a href="{{ route('mondash') }}" class="{{ request()->routeIs('mondash') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
             <li class="has-submenu">
-                <a href="#" ><i class="bi bi-display"></i>Actifs</a>
+                <a href="#" class="{{ request()->is('actif*') ? 'active' : '' }}"><i class="bi bi-display"></i>Actifs</a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
-                    <li><a href="#"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
-                    <li><a href="#"><i class="bi bi-cpu"></i>Actif matériel</a></li>
+                    <li><a href="/actif-data" class="{{ request()->is('actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
+                    <li><a href="/actif-logiciel" class="{{ request()->is('actif-logiciel') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
+                    <li><a href="{{ route('materiels.create') }}" class="{{ request()->is('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
-                <a href="#"><i class="bi bi-person"></i>Utilisateur</a>
+                <a href="#" class="{{ request()->is('utilisateur*') ? 'active' : '' }}"><i class="bi bi-person"></i>Utilisateur</a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="bi bi-person-badge"></i>Employé</a></li>
-                    <li><a href="#"><i class="bi bi-gear"></i>Service</a></li>
+                    <li><a href="#" class="{{ request()->is('employe*') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Employé</a></li>
+                    <li><a href="#" class="{{ request()->is('service*') ? 'active' : '' }}"><i class="bi bi-gear"></i>Service</a></li>
                 </ul>
             </li>
-            <li><a href="#"><i class="bi bi-truck"></i>Fournisseur</a></li>
-            <li><a href="#"><i class="bi bi-award"></i>Attribution</a></li>
-            <li><a href="#"><i class="bi bi-tools"></i>Maintenance</a></li>
-            <li><a href="#"><i class="bi bi-clock-history"></i>Historique</a></li>
+            <li><a href="#" class="{{ request()->is('fournisseur') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
+            <li><a href="#" class="{{ request()->is('attribution') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
+            <li><a href="#" class="{{ request()->is('maintenance') ? 'active' : '' }}"><i class="bi bi-tools"></i>Maintenance</a></li>
+            <li><a href="#" class="{{ request()->is('historique') ? 'active' : '' }}"><i class="bi bi-clock-history"></i>Historique</a></li>
             <li class="has-submenu">
-                <a href="#"><i class="bi bi-person-circle"></i>Compte</a>
+                <a href="#" class="{{ request()->is('compte*') ? 'active' : '' }}"><i class="bi bi-person-circle"></i>Compte</a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
-                    <li><a href="#"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
-                    <li><a href="#"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
+                    <li><a href="#" class="{{ request()->is('nouveau-compte') ? 'active' : '' }}"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
+                    <li><a href="#" class="{{ request()->is('profil') ? 'active' : '' }}"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
+                    <li><a href="#" class="{{ request()->is('deconnexion') ? 'active' : '' }}"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
                 </ul>
             </li>
         </ul>
@@ -97,5 +96,10 @@
             @yield('main-content')
         </div>
     </div>
+
+    <!-- Optional Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('custom-js-add')
 </body>
 </html>
