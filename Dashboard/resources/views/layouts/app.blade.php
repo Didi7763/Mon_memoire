@@ -33,9 +33,9 @@
             <li class="has-submenu">
                 <a href="#" class="{{ request()->is('actif*') ? 'active' : '' }}"><i class="bi bi-display"></i>Actifs</a>
                 <ul class="submenu">
-                    <li><a href="/actif-data" class="{{ request()->is('actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
+                    <li><a href="/donnees" class="{{ request()->is('donnees.actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
                     <li><a href="/actif-logiciel" class="{{ request()->is('actif-logiciel') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
-                    <li><a href="{{ route('materiels.create') }}" class="{{ request()->is('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
+                    <li><a href="/materiels" class="{{ request()->is('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
                 </ul>
             </li>
             <li class="has-submenu">
@@ -45,10 +45,10 @@
                     <li><a href="#" class="{{ request()->is('service*') ? 'active' : '' }}"><i class="bi bi-gear"></i>Service</a></li>
                 </ul>
             </li>
-            <li><a href="#" class="{{ request()->is('fournisseur') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
-            <li><a href="#" class="{{ request()->is('attribution') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
+            <li><a href="{{ route('fournisseurs.index') }}" class="{{ request()->is('fournisseur') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
+            <li><a href="{{ route('attributions.index') }}" class="{{ request()->is('attribution') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
             <li><a href="#" class="{{ request()->is('maintenance') ? 'active' : '' }}"><i class="bi bi-tools"></i>Maintenance</a></li>
-            <li><a href="#" class="{{ request()->is('historique') ? 'active' : '' }}"><i class="bi bi-clock-history"></i>Historique</a></li>
+            <li><a href="{{ route('historiques.index') }}" class="{{ request()->is('historiques') ? 'active' : '' }}"><i class="bi bi-clock-history"></i>Historique</a></li>
             <li class="has-submenu">
                 <a href="#" class="{{ request()->is('compte*') ? 'active' : '' }}"><i class="bi bi-person-circle"></i>Compte</a>
                 <ul class="submenu">

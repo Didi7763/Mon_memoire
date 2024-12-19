@@ -10,12 +10,12 @@ class MaterielController extends Controller
     public function index()
     {
         $materiels = Materiel::paginate(10);
-        return view('materiels.index', compact('materiels'));
+        return view('actif-materiel', compact('materiels'));
     }
 
     public function create()
     {
-        return view('materiels.create');
+        return view('materiels');
     }
 
     public function store(Request $request)

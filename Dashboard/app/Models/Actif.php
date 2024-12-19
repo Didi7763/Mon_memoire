@@ -9,16 +9,15 @@ class Actif extends Model
 {
     use HasFactory;
 
-    protected $table = 'actif';
+    // Lier le modèle à la table 'actifs'
+    protected $table = 'actifs';
 
+    // Colonnes mass-assignables
+    protected $fillable = ['NomAct', 'ComtAct'];
 
-    // Vous pouvez également définir les propriétés et relations ici
-    protected $fillable = ['nom', 'type', 'utilisations'];
-
+    // Relation avec la table "attribuer"
     public function attributions()
-{
-    return $this->hasMany(Attribuer::class, 'IdAct', 'IdAct');
+    {
+        return $this->hasMany(Attribuer::class, 'IdAct', 'IdAct');
+    }
 }
-
-}
-
