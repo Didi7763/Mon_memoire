@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,37 +8,77 @@ use App\Models\Fournisseur;
 class FournisseurController extends Controller
 {
     // Afficher la liste des fournisseurs
-    public function index()
+        public function index()
     {
-        $fournisseurs = Fournisseur::all();
+        // Récupérer tous les fournisseurs avec pagination
+        $fournisseurs = Fournisseur::paginate(10);
+
+        // Passer la variable à la vue
         return view('fournisseurs.index', compact('fournisseurs'));
     }
+
+
+    // Afficher le formulaire de création
+    public function create()
+    {
+        return view('fournisseurs.create');
+    }
+
+
 
     // Ajouter un fournisseur
     public function store(Request $request)
     {
         $request->validate([
-            'id_four' => 'required|unique:fournisseurs,IdFour',
-            'nom_four' => 'required|string|max:255',
-            'contact_four' => 'required|string|max:255',
-            'email_four' => 'required|email|max:255',
-            'adress_local_four' => 'required|string',
-            'nom_personnel_contacte' => 'required|string|max:255',
-            'type_produit_fournit' => 'required|string',
-            'Note_four' => 'nullable|string',
+            'IdFour' => 'required|unique:fournisseurs,IdFour',
+            'NomFour' => 'required|string|max:255',
+            'ContFour' => 'required|string|max:255',
+            'EmailFour' => 'required|email|max:255',
+            'AdressFour' => 'required|string',
+            'NomPersCont' => 'required|string|max:255',
+            'TypProdFournit' => 'required|string',
+            'NotesFour' => 'nullable|string',
         ]);
 
-        Fournisseur::create([
-            'IdFour' => $request->id_four,
-            'NomFour' => $request->nom_four,
-            'ContFour' => $request->contact_four,
-            'EmailFour' => $request->email_four,
-            'AdressFour' => $request->adress_local_four,
-            'NomPersCont' => $request->nom_personnel_contacte,
-            'TypProdFournit' => $request->type_produit_fournit,
-            'NotesFour' => $request->Note_four,
-        ]);
+        Fournisseur::create($request->all());
 
         return redirect()->route('fournisseurs.index')->with('success', 'Fournisseur ajouté avec succès!');
+    }
+
+    // Afficher le formulaire de modification
+    public function edit($IdFour)
+    {
+        $fournisseurs = Fournisseur::findOrFail($IdFour);
+        return view('fournisseurs.edit', compact('fournisseurs'));
+    }
+
+    // Mettre à jour un fournisseur existant
+    public function update(Request $request, $IdFour)
+    {
+        $fournisseurs = Fournisseur::findOrFail($IdFour);
+
+        $request->validate([
+            'IdFour' => "required|unique:fournisseurs,IdFour,$IdFour",
+            'NomFour' => 'required|string|max:255',
+            'ContFour' => 'required|string|max:255',
+            'EmailFour' => 'required|email|max:255',
+            'AdressFour' => 'required|string',
+            'NomPersCont' => 'required|string|max:255',
+            'TypProdFournit' => 'required|string',
+            'NotesFour' => 'nullable|string',
+        ]);
+
+        $fournisseurs->update($request->all());
+
+        return redirect()->route('fournisseurs.index')->with('success', 'Le fournisseur a été mis à jour avec succès.');
+    }
+
+    // Supprimer un fournisseur
+    public function destroy($IdFour)
+    {
+        $fournisseur = Fournisseur::findOrFail($IdFour);
+        $fournisseur->delete();
+
+        return redirect()->route('fournisseurs.index')->with('success', 'Fournisseur supprimé avec succès.');
     }
 }

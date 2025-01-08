@@ -30,26 +30,26 @@
         <h3 class="w3-bar-item">CARENA</h3>
         <ul>
             <li><a href="{{ route('mondash') }}" class="{{ request()->routeIs('mondash') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
-            <li class="has-submenu">
+            <li class="has-submenu {{ request()->is('actif*') ? 'active' : '' }}">
                 <a href="#" class="{{ request()->is('actif*') ? 'active' : '' }}"><i class="bi bi-display"></i>Actifs</a>
                 <ul class="submenu">
-                    <li><a href="/donnees" class="{{ request()->is('donnees.actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
-                    <li><a href="/actif-logiciel" class="{{ request()->is('actif-logiciel') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
-                    <li><a href="/materiels" class="{{ request()->is('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
+                    <li><a href="/donnees" class="{{ request()->routeIs('donnees.actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
+                    <li><a href="{{ route('logiciel.index') }}" class="{{ request()->routeIs('logiciel.index') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
+                    <li><a href="{{ route('actif-materiel') }}" class="{{ request()->routeIs('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
                 </ul>
             </li>
-            <li class="has-submenu">
+            <li class="has-submenu {{ request()->is('utilisateur*') ? 'active' : '' }}">
                 <a href="#" class="{{ request()->is('utilisateur*') ? 'active' : '' }}"><i class="bi bi-person"></i>Utilisateur</a>
                 <ul class="submenu">
-                    <li><a href="#" class="{{ request()->is('employe*') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Employé</a></li>
-                    <li><a href="#" class="{{ request()->is('service*') ? 'active' : '' }}"><i class="bi bi-gear"></i>Service</a></li>
+                    <li><a href="{{ route('User_Employe.index') }}" class="{{ request()->routeIs('User_Employe.index') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Employé</a></li>
+                    <li><a href="{{ route('User_Service.index') }}" class="{{ request()->routeIs('User_Service.index') ? 'active' : '' }}"><i class="bi bi-gear"></i>Service</a></li>
                 </ul>
             </li>
-            <li><a href="{{ route('fournisseurs.index') }}" class="{{ request()->is('fournisseur') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
-            <li><a href="{{ route('attributions.index') }}" class="{{ request()->is('attribution') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
-            <li><a href="#" class="{{ request()->is('maintenance') ? 'active' : '' }}"><i class="bi bi-tools"></i>Maintenance</a></li>
+            <li><a href="{{ route('fournisseurs.index') }}" class="{{ request()->routeIs('fournisseurs.index') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
+            <li><a href="{{ route('attributions.index') }}" class="{{ request()->routeIs('attributions.index') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
+            <li><a href="{{ route('maintenance.index') }}" class="{{ request()->routeIs('maintenance.index') ? 'active' : '' }}"><i class="bi bi-tools"></i>Maintenance</a></li>
             <li><a href="{{ route('historiques.index') }}" class="{{ request()->is('historiques') ? 'active' : '' }}"><i class="bi bi-clock-history"></i>Historique</a></li>
-            <li class="has-submenu">
+            <li class="has-submenu {{ request()->is('compte*') ? 'active' : '' }}">
                 <a href="#" class="{{ request()->is('compte*') ? 'active' : '' }}"><i class="bi bi-person-circle"></i>Compte</a>
                 <ul class="submenu">
                     <li><a href="#" class="{{ request()->is('nouveau-compte') ? 'active' : '' }}"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
@@ -58,6 +58,7 @@
                 </ul>
             </li>
         </ul>
+
     </div>
 
     <!-- Right Panel -->

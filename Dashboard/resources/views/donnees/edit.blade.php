@@ -2,9 +2,46 @@
 
 @section('title', 'Modifier un Actif de Données')
 
+@section('custom-css-add')
+<style>
+
+.header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3dvh;
+        margin-bottom: 5dvh;
+        padding: 2dvh;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-add {
+        padding: 0.5dvh 1dvw;
+        display: flex;
+        align-items: center;
+        gap: 0.5dvw;
+    }
+
+    /* Personnalisation CSS pour le formulaire */
+    .form-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+</style>
+@endsection
+
 @section('main-content')
-<div class="container">
+
+<div class="header-container">
     <h2>Modifier un Actif de Données</h2>
+    <a href="{{ route('donnees.index') }}" class="btn btn-secondary">Retour à la liste des données</a>
+</div>
+
+<div class="form-container">
     <form action="{{ route('donnees.update', $donnee->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -24,4 +61,6 @@
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
 </div>
+
+
 @endsection

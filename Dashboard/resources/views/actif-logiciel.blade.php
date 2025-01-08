@@ -1,131 +1,140 @@
 @extends('layouts.app')
 
-@section('title')
-Liste des Actifs Logiciels
-@endsection
 
+<!--section de css spécifique au main-content-->
 @section('custom-css-add')
-<style>
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .btn-add {
-        padding: 0.5rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .table-container {
-        background: #fff;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: center;
-    }
-
-    .action-btn {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-2px);
-    }
-</style>
+     <!--css pour les formulaires-->
+     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
 @endsection
 
+
+
+
+<!-- section du titre du document -->
+@section('title')
+Actifs logiciels
+@endsection
+
+
+
+
+
+<!--section du sidebar du doucument-->
 @section('sidebar')
 <ul>
-    <li><a href="#tableau de bord"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
+    <li> <a href="#tableau de bord" ><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
     <li class="has-submenu"><a href="#actifs" class="active"><i class="bi bi-display"></i>Actifs</a>
         <ul class="submenu">
-            <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
+            <li><a class="dropdown-item " href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
             <li><a class="dropdown-item active" href="#"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
             <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i>Actif matériel</a></li>
         </ul>
     </li>
-    <!-- Reste du sidebar identique à votre code -->
+    <li class="has-submenu"><a href="#utilisateur"><i class="bi bi-person"></i>Utilisateur</a>
+        <ul class="submenu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge"></i>Employé</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i>Service</a></li>
+        </ul>
+    </li>
+    <li><a href="#fournisseur"><i class="bi bi-truck"></i>Fournisseur</a></li>
+    <li><a href="#attribution"><i class="bi bi-award"></i>Attribution</a></li>
+    <li><a href="#maintenance"><i class="bi bi-tools"></i>Maintenance</a></li>
+    <li><a href="#historique"><i class="bi bi-clock-history"></i>Historique</a></li>
+    <li class="has-submenu"><a href="#compte"><i class="bi bi-person-circle"></i>Compte</a>
+        <ul class="submenu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
+        </ul>
+    </li>
 </ul>
 @endsection
 
+
+
+
+<!-- la section du main-content -->
 @section('main-content')
-<div class="header-container">
-    <h2>Liste des Actifs Logiciels</h2>
-    <a href="/logiciels" class="btn btn-primary btn-add">
-        <i class="bi bi-plus-circle"></i>
-        Ajouter un actif logiciel
-    </a>
-</div>
-
-<div class="table-container">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Version</th>
-                <th>Type de licence</th>
-                <th>Nombre de licences</th>
-                <th>Clé de licence</th>
-                <th>Date d'achat</th>
-                <th>Date d'expiration</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($logiciels as $logiciel)
-            <tr>
-                <td>{{ $logiciel->IdAct }}</td>
-                <td>{{ $logiciel->VersionLog }}</td>
-                <td>{{ $logiciel->TypLicLog }}</td>
-                <td>{{ $logiciel->NbrLicLog }}</td>
-                <td>{{ $logiciel->CleLicLog }}</td>
-                <td>{{ $logiciel->DatAchLog }}</td>
-                <td>{{ $logiciel->DatExpLog }}</td>
-                <td class="action-buttons">
-                    <button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('logiciels.show', $logiciel->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <button class="action-btn btn-warning" title="Modifier" onclick="window.location.href='{{ route('logiciels.edit', $logiciel->id) }}'">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <form action="{{ route('logiciels.destroy', $logiciel->id) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet actif ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="8" class="text-center">Aucun actif logiciel trouvé</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    @if($logiciels->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $logiciels->links() }}
+<!--cadre du formulaire-->
+<div class="card-form">
+    <!--titre du formulaire-->
+    <div class="head-form">
+        <div class="title-form">
+            <h2>Formulaire d'actif logiciel</h2>
+        </div>
+        <div class="icon-back">
+            <i class="bi bi-arrow-left-circle"></i>
+        </div>
     </div>
-    @endif
+    <!--le formulaire-->
+    <form action="" method="post" class="content-form">
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" id="IdAct" placeholder="Identifiant de l'actif logiciel" aria-label="Identifiant de l'actif logiciel" name="idact_log" required="required">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="NomAct" placeholder="Nom du logiciel" aria-label="Nom du logiciel" name="nom_log" required="required">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" id="VersionLog" placeholder="Version du logiciel" aria-label="Version du logiciel" name="version_log">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="TypLicLog" placeholder=" Type de licence du logiciel" aria-label="Type de licence du logiciel" name="Type_Licence_Log">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <input type="number" class="form-control" id="NbrLicLog" placeholder="Nombre de licence" aria-label="Nombre de licence" name="Nbre_Lic_Log">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="CleLicLog" placeholder="La clé de la licence" aria-label="La clé de la licence" name="cle_lic_log" required="required">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="col">
+                    <input type="number" class="form-control" id="NbrMinLicLog" placeholder="Nombre minimal de licence" aria-label="Nombre minimal de licence" name="Nbre_Min_Lic_Log">
+                </div>
+            </div>
+            <div class="col">
+                <select class="form-select" id="IdFour" required="required" name="nom_four">
+                    <option selected>Identifier le fournisseur...</option>
+                    <option>...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label for="title-date1">Date d'achat du logiciel</label>
+                <input type="date" id="DatAchLog" class="form-control"  name=datach_log" required="required">
+            </div>
+            <div class="col">
+                <label for="title-date2">Date d'expiration de la licence</label>
+                <input type="date" id="DatExpLog" class="form-control"  name=datexp_log" required="required">
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="col">
+                    <label for="commentaire">Avez-vous un commentaire sur le matériel?</label>
+                    <textarea name="comment_mat" id="ComtMat" class="form-control" rows="1" cols="50" placeholder="Écrivez votre commentaire ici..." name="commentaire_mat"></textarea>
+                </div>
+        </div>
+
+
+        <!--fin du formulaire-->
+        <div class="button-form">
+            <button type="submit" name="valider" id="valider" class="btn btn-primary">Valider </button>
+        </div>
+    </form>
+
 </div>
 @endsection

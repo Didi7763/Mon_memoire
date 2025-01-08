@@ -184,8 +184,8 @@ ul ul li a.dropdown-item.active{
     margin-right: 1vw;
 }
 #contentpage{
-    max-height: 90dvh; /* Ajustez la hauteur selon vos besoins */
-    height: 90dvh;
+    max-height: 92vh; /* Ajustez la hauteur selon vos besoins */
+    height: 92vh;
     overflow-y: auto; /* Ajoute la barre de défilement verticale lorsque le contenu dépasse la hauteur maximale */
     padding-right: 10px; /* Pour ajouter un peu d'espace autour du défilement */
 

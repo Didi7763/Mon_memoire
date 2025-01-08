@@ -13,7 +13,7 @@ class LogicielController extends Controller
     public function index()
     {
         $logiciels = Logiciel::paginate(10); // Récupère les logiciels avec pagination
-        return view('actif-logiciel', compact('logiciels'));
+        return view('logiciel.actif-logiciel', compact('logiciels'));
     }
 
     /**
@@ -21,7 +21,7 @@ class LogicielController extends Controller
      */
     public function create()
     {
-        return view('logiciels.create');
+        return view('logiciel.create');
     }
 
     /**
@@ -42,7 +42,7 @@ class LogicielController extends Controller
         ]);
 
         Logiciel::create($request->all());
-        return redirect()->route('logiciels.index')->with('success', 'Logiciel ajouté avec succès.');
+        return redirect()->route('logiciel.index')->with('success', 'Logiciel ajouté avec succès.');
     }
 
     /**
@@ -51,7 +51,7 @@ class LogicielController extends Controller
     public function show($id)
     {
         $logiciel = Logiciel::findOrFail($id);
-        return view('logiciels.show', compact('logiciel'));
+        return view('logiciel.show', compact('logiciel'));
     }
 
     /**
@@ -60,7 +60,7 @@ class LogicielController extends Controller
     public function edit($id)
     {
         $logiciel = Logiciel::findOrFail($id);
-        return view('logiciels.edit', compact('logiciel'));
+        return view('logiciel.edit', compact('logiciel'));
     }
 
     /**
@@ -81,7 +81,7 @@ class LogicielController extends Controller
 
         $logiciel = Logiciel::findOrFail($id);
         $logiciel->update($request->all());
-        return redirect()->route('logiciels.index')->with('success', 'Logiciel mis à jour avec succès.');
+        return redirect()->route('logiciel.index')->with('success', 'Logiciel mis à jour avec succès.');
     }
 
     /**
@@ -91,6 +91,6 @@ class LogicielController extends Controller
     {
         $logiciel = Logiciel::findOrFail($id);
         $logiciel->delete();
-        return redirect()->route('logiciels.index')->with('success', 'Logiciel supprimé avec succès.');
+        return redirect()->route('logiciel.index')->with('success', 'Logiciel supprimé avec succès.');
     }
 }

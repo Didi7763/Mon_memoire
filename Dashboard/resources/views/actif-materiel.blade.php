@@ -1,157 +1,147 @@
 @extends('layouts.app')
 
-@section('title')
-Liste des Actifs Matériels
-@endsection
 
+<!--section de css spécifique au main-content-->
 @section('custom-css-add')
-<style>
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        padding: 1rem;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .btn-add {
-        padding: 0.5rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .table-container {
-        background: #fff;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-
-    .status-stock { background: #e3f2fd; color: #1976d2; }
-    .status-affecte { background: #e8f5e9; color: #2e7d32; }
-    .status-panne { background: #fce4ec; color: #c2185b; }
-    .status-maintenance { background: #fff3e0; color: #f57c00; }
-    .status-reforme { background: #efebe9; color: #5d4037; }
-
-    .action-buttons {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: center;
-    }
-
-    .action-btn {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-2px);
-    }
-</style>
+    <!--css pour les formulaires-->
+    <link rel="stylesheet" href="{{ asset('css/form.css') }}">
 @endsection
 
+
+
+
+<!-- section du titre du document -->
+@section('title')
+Actifs Matériels
+@endsection
+
+
+
+
+
+<!--section du sidebar du doucument-->
 @section('sidebar')
 <ul>
     <li> <a href="#tableau de bord" ><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
     <li class="has-submenu"><a href="#actifs" class="active"><i class="bi bi-display"></i>Actifs</a>
         <ul class="submenu">
-            <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
+            <li><a class="dropdown-item " href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
             <li><a class="dropdown-item" href="#"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
             <li><a class="dropdown-item active" href="#"><i class="bi bi-cpu"></i>Actif matériel</a></li>
         </ul>
     </li>
-    <!-- Reste du sidebar identique à votre code -->
+    <li class="has-submenu"><a href="#utilisateur"><i class="bi bi-person"></i>Utilisateur</a>
+        <ul class="submenu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge"></i>Employé</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i>Service</a></li>
+        </ul>
+    </li>
+    <li><a href="#fournisseur"><i class="bi bi-truck"></i>Fournisseur</a></li>
+    <li><a href="#attribution"><i class="bi bi-award"></i>Attribution</a></li>
+    <li><a href="#maintenance"><i class="bi bi-tools"></i>Maintenance</a></li>
+    <li><a href="#historique"><i class="bi bi-clock-history"></i>Historique</a></li>
+    <li class="has-submenu"><a href="#compte"><i class="bi bi-person-circle"></i>Compte</a>
+        <ul class="submenu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
+        </ul>
+    </li>
 </ul>
 @endsection
 
+
+
+
+<!-- la section du main-content -->
 @section('main-content')
-<div class="header-container">
-    <h2>Liste des Actifs Matériels</h2>
-    <a href="{{ route('materiels.create') }}" class="btn btn-primary btn-add">
-        <i class="bi bi-plus-circle"></i>
-        Ajouter un actif matériel
-    </a>
-</div>
+    <!--cadre du formulaire-->
+    <div class="card-form">
+        <!--titre du formulaire-->
+        <div class="head-form">
+            <div class="title-form">
+                <h2>Formulaire d'actif matériel</h2>
+            </div>
+            <div class="icon-back">
+                <i class="bi bi-arrow-left-circle"></i>
+            </div>
+        </div>
+        <!--le formulaire-->
+        <form action="" method="post" class="content-form">
+            <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="IdAct" placeholder="Identifiant de l'actif matériel" aria-label="Identifiant de l'actif matériel" name="idact_mat" required="required">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="NomAct" placeholder="Nom de matériel" aria-label="Nom du matériel" name="nom_mat" required="required">
+                </div>
+              </div>
 
-<div class="table-container">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Marque</th>
-                <th>Modèle</th>
-                <th>N° Série</th>
-                <th>Quantité</th>
-                <th>Statut</th>
-                <th>Date d'acquisition</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($materiels as $materiel)
-            <tr>
-                <td>{{ $materiel->IdAct }}</td>
-                <td>{{ $materiel->NomAct }}</td>
-                <td>{{ $materiel->MarqMat }}</td>
-                <td>{{ $materiel->ModMarq }}</td>
-                <td>{{ $materiel->NumSerieMat }}</td>
-                <td>{{ $materiel->QteMat }}</td>
-                <td>
-                    <span class="status-badge 
-                        @switch($materiel->StatMat)
-                            @case('En stock') status-stock @break
-                            @case('Affecté') status-affecte @break
-                            @case('panne') status-panne @break
-                            @case('reparation') status-maintenance @break
-                            @case('Réformé') status-reforme @break
-                        @endswitch">
-                        {{ $materiel->StatMat }}
-                    </span>
-                </td>
-                <td>{{ $materiel->DatAcqMat }}</td>
-                <td class="action-buttons">
-                    <button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('materiels.show', $materiel->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <button class="action-btn btn-warning" title="Modifier" onclick="window.location.href='{{ route('materiels.edit', $materiel->id) }}'">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <form action="{{ route('materiels.destroy', $materiel->id) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet actif ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="9" class="text-center">Aucun actif matériel trouvé</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="MarqMat" placeholder="Marque du matériel" aria-label="Marque du materiel" name="marq_mat">
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" id="ModMat" placeholder="Modèle du matériel" aria-label="Modèle du matériel" name="modèle_mat">
+                </div>
+              </div>
 
-    @if($materiels->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $materiels->links() }}
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" id="IdAct" placeholder="Numéro de serie" aria-label="Numéro de serie" name="numserie_mat" required="required">
+                </div>
+                <div class="col">
+                  <input type="number" class="form-control" id="QteMat" placeholder="Quantité du matériel" aria-label="Quantité du matériel" name="qte_mat">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                    <select  class="form-select" id="RefCatMat" required="required" name="cat_mat">
+                        <option selected>Identifier la catégorie du matériel...</option>
+                        <option>...</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-select" id="IdFour" required="required" name="nom_four">
+                        <option selected>Identifier le fournisseur...</option>
+                        <option>...</option>
+                    </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                    <select  class="form-select" id="StatMat" required="required" name="satut_mat">
+                        <option selected>Statut du matériel...</option>
+                        <option value="En stock">En stock</option>
+                        <option value="Affecté">En cours d'utilisation</option>
+                        <option value="panne">En panne</option>
+                        <option value="reparation">En maintenace</option>
+                        <option value="Réformé">Réformé</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="number" id="DureVieMat" class="form-control" placeholder="Mentionnez la durée de vie en moyenne du matériel (en année)" aria-label="Mentionnez la durée de vie en moyenne du matériel (en année)" name="duree_mat" required="required">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <label for="title-date1">Date d'acquisition du Matériel</label>
+                  <input type="date" id="DatAchMat" class="form-control"  name=datach_mat" required="required">
+                </div>
+                <div class="col">
+                  <label for="commentaire">Avez-vous un commentaire sur le matériel?</label>
+                  <textarea name="comment_mat" id="ComtAct" class="form-control" rows="1" cols="50" placeholder="Écrivez votre commentaire ici..." name="commentaire_mat"></textarea>
+                </div>
+              </div>
+
+                <!--fin du formulaire-->
+                <div class="button-form">
+                    <button type="submit" name="valider" id="valider" class="btn btn-primary">Valider </button>
+                </div>
+        </form>
+
     </div>
-    @endif
-</div>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attribuer;
 use App\Models\Actif;
 use App\Models\Utilisateur;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 
 class AttributionController extends Controller

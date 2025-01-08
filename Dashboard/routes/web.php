@@ -3,33 +3,35 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MaterielController;
+use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\DonneeController;
 use App\Http\Controllers\LogicielController;
 use App\Http\Controllers\AttribuerController;
 use App\Http\Controllers\AttributionController;
-
-
+use App\Models\Employe;
+use App\Models\Maintenance;
 
 Route::get('//', [DashboardController::class, 'index'])->name('dashboard');
 // Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
-Route::get('/actif-materiel', [MaterielController::class, 'index'])->name('actif-materiel');
+
 
 Route::get('/actif-logiciel', [LogicielController::class, 'index'])->name('actif-logiciel');
 
 
 Route::get('/mondash', [DashboardController::class, 'index'])->name('mondash');
 
-Route::resource('materiels', controller: MaterielController::class);
 
 
-Route::get('/actif-materiel', function () {
+/*Route::get('/actif-materiel', function () {
     return view('actif.create'); // Affiche la vue sans traitement de données
 })->name('actif.create');
-
+*/
 Route::get('/', function () {
     return view('welcome');
 });
@@ -50,13 +52,36 @@ Route::middleware([
 // })->name('dashboard');
 
 
-// Afficher le formulaire d'ajout d'un actif
-Route::get('/materiels/create', [MaterielController::class, 'index'])->name('materiels.create');
 
-// Ajouter un actif
-Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
+
+// Route pour afficher la liste des matériels actifs
+Route::get('/materiel/actif-materiel', [MaterielController::class, 'index'])->name('actif-materiel');
+
+// Ressource pour les actions CRUD sur les matériels
+Route::resource('materiel', MaterielController::class);
+
+// Ressource pour les actions CRUD sur les logiciels
+Route::resource('logiciel', LogicielController::class);
+
+// Afficher le formulaire d'ajout d'un actif
+Route::get('/materiel/create', [MaterielController::class, 'create'])->name('materiel.create');
+
+// Ajouter un actif (POST)
+Route::post('/materiel', [MaterielController::class, 'store'])->name('materiel.store');
+
+
 
 Route::resource('donnees', controller: DonneeController::class);
+
+Route::resource('User_Employe', controller: EmployeController::class);
+
+Route::resource('User_Service', controller: ServiceController::class);
+
+Route::resource('fournisseurs', controller: FournisseurController::class);
+
+Route::resource('maintenance', controller: MaintenanceController::class);
+
+Route::resource('attributions', controller: AttribuerController::class);
 
 Route::resource('historiques', HistoriqueController::class);
 

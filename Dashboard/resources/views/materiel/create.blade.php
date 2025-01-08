@@ -5,6 +5,26 @@
 
 @section('custom-css-add')
 <style>
+
+.header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3dvh;
+        margin-bottom: 5dvh;
+        padding: 2dvh;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-add {
+        padding: 0.5dvh 1dvw;
+        display: flex;
+        align-items: center;
+        gap: 0.5dvw;
+    }
+
     /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
@@ -17,12 +37,12 @@
 
 @section('main-content')
 <div class="header-container">
-    <h2>Ajouter un Actif Matériel</h2>
-    <a href="{{ route('materiels.index') }}" class="btn btn-secondary">Retour à la liste</a>
+    <h2>Formulaire d'Actif Matériel</h2>
+    <a href="{{ route('actif-materiel') }}" class="btn btn-secondary">Retour à la liste des matériels</a>
 </div>
 
 <div class="form-container">
-    <form action="{{ route('materiels.store') }}" method="POST">
+    <form action="{{ route('materiel.store') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="NomAct">Nom</label>

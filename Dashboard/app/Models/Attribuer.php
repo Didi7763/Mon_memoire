@@ -8,18 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Attribuer extends Model
 {
     use HasFactory;
-
     protected $table = 'attribuer';
+
 
     protected $fillable = ['IdAct', 'CodeUser', 'NumAdmin', 'DatAttAct'];
 
+    // Relation avec le modèle Actif
     public function actif()
     {
-        return $this->belongsTo(Actif::class, 'IdAct', 'IdAct');
+        return $this->belongsTo(Actif::class, 'IdAct');
     }
 
+    // Relation avec le modèle Utilisateur
     public function utilisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'CodeUser', 'CodeUser');
+        return $this->belongsTo(Utilisateur::class, 'CodeUser');
+    }
+
+    // Relation avec le modèle Admin
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'NumAdmin');
     }
 }
+

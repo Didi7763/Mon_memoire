@@ -1,16 +1,82 @@
 @extends('layouts.app')
 
-@section('title', 'Liste des Fournisseurs')
+@section('title')
+Liste des fournisseurs
+@endsection
+
+@section('custom-css-add')
+<style>
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3dvh;
+        margin-bottom: 5dvh;
+        padding: 2dvh;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-add {
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .table-container {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .action-btn {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+</style>
+@endsection
+
+@section('sidebar')
+<ul>
+    <li><a href="#tableau de bord"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
+    <li class="has-submenu"><a href="#actifs" class="active"><i class="bi bi-display"></i>Actifs</a>
+        <ul class="submenu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i>Actifs de données</a></li>
+            <li><a class="dropdown-item active" href="#"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu"></i>Actif matériel</a></li>
+        </ul>
+    </li>
+    <!-- Reste du sidebar identique à votre code -->
+</ul>
+@endsection
 
 @section('main-content')
-<div class="container">
-    <h2 class="my-4">Liste des Fournisseurs</h2>
+<div class="header-container">
+    <h2>Liste des fournisseurs</h2>
+    <a href="{{ route('fournisseurs.create') }}" class="btn btn-primary btn-add">
+        <i class="bi bi-plus-circle"></i>
+        Ajouter un nouveau fournisseur
+    </a>
+</div>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
+<div class="table-container">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>ID</th>
@@ -21,64 +87,42 @@
                 <th>Type Produit</th>
                 <th>Nom Contacté</th>
                 <th>Notes</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($fournisseurs as $fournisseur)
-            <tr>
-                <td>{{ $fournisseur->IdFour }}</td>
-                <td>{{ $fournisseur->NomFour }}</td>
-                <td>{{ $fournisseur->ContFour }}</td>
-                <td>{{ $fournisseur->EmailFour }}</td>
-                <td>{{ $fournisseur->AdressFour }}</td>
-                <td>{{ $fournisseur->TypProdFournit }}</td>
-                <td>{{ $fournisseur->NomPersCont }}</td>
-                <td>{{ $fournisseur->NotesFour }}</td>
-            </tr>
-            @endforeach
+            @forelse($fournisseurs as $fournisseur)
+                <tr>
+                    <td>{{ $fournisseur->IdFour }}</td>
+                    <td>{{ $fournisseur->NomFour }}</td>
+                    <td>{{ $fournisseur->ContFour }}</td>
+                    <td>{{ $fournisseur->EmailFour }}</td>
+                    <td>{{ $fournisseur->AdressFour }}</td>
+                    <td>{{ $fournisseur->TypProdFournit }}</td>
+                    <td>{{ $fournisseur->NomPersCont }}</td>
+                    <td>{{ $fournisseur->NotesFour }}</td>
+                    <td class="action-buttons">
+                        <a href="{{ route('fournisseurs.edit', $fournisseur->IdFour) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <form action="{{ route('fournisseurs.destroy', $fournisseur->IdFour) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="9" class="text-center">Aucun fournisseur trouvé</td>
+                </tr>
+            @endforelse
         </tbody>
+
     </table>
 
-    <h3 class="my-4">Ajouter un Fournisseur</h3>
-    <form action="{{ route('fournisseurs.store') }}" method="POST">
-        @csrf
-        <div class="row mb-3">
-            <div class="col">
-                <input type="text" class="form-control" name="id_four" placeholder="ID Fournisseur" required>
-            </div>
-            <div class="col">
-                <input type="text" class="form-control" name="nom_four" placeholder="Nom Fournisseur" required>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <input type="text" class="form-control" name="contact_four" placeholder="Contact Fournisseur" required>
-            </div>
-            <div class="col">
-                <input type="email" class="form-control" name="email_four" placeholder="Email Fournisseur" required>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <input type="text" class="form-control" name="adress_local_four" placeholder="Adresse" required>
-            </div>
-            <div class="col">
-                <input type="text" class="form-control" name="nom_personnel_contacte" placeholder="Nom Contacté" required>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col">
-                <select name="type_produit_fournit" class="form-select" required>
-                    <option value="" disabled selected>Type Produit</option>
-                    <option value="matériel">Matériel</option>
-                    <option value="logiciel">Logiciel</option>
-                </select>
-            </div>
-            <div class="col">
-                <textarea name="Note_four" class="form-control" placeholder="Notes"></textarea>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-    </form>
+    @if($fournisseurs->hasPages())
+    <div class="d-flex justify-content-center mt-4">
+        {{ $fournisseurs->links() }}
+    </div>
+    @endif
 </div>
 @endsection
