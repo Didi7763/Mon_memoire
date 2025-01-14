@@ -49,6 +49,26 @@ Liste des employés
     .action-btn:hover {
         transform: translateY(-2px);
     }
+
+
+
+
+
+
+    .status-badge {
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .status-activite { background: #e3f2fd; color: #1976d2; }
+    .status-retraite { background: #e8f5e9; color: #2e7d32; }
+    .status-contrat {background: #fbffde; color: #c0c524;}
+    .status-suspendu { background: #fce4ec; color: #c2185b; }
+    .status-conge { background: #fff3e0; color: #f57c00; }
+    .status-formation { background: #efebe9; color: #5d4037; }
 </style>
 @endsection
 
@@ -79,13 +99,13 @@ Liste des employés
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Codes</th>
-                <th>Fonctions</th>
-                <th>Statut</th>
-                <th>Liste des actifs</th>
+                <th>Code</th>
+                <th>Nom et Prénoms</th>
+                <th>Contact</th>
+                <th>Email</th>
                 <th>Fonction</th>
                 <th>Statut</th>
-                <th>Liste des actifs</th>
+                <th>Actifs obligatoire</th>
                 <th>Services</th>
                 <th>Actions</th>
             </tr>
@@ -93,30 +113,41 @@ Liste des employés
         <tbody>
             @forelse($employes as $employe)
             <tr>
-                <td>{{ $employe->CodeUser1 }}</td>
+                <td>{{ $employe->utilisateur->CodeUser }}</td>
+                <td>{{ $employe->utilisateur->NomCompUser }}</td>
+                <td>{{ $employe->utilisateur->ContactUser }}</td>
+                <td>{{ $employe->utilisateur->EmailUser }}</td>
                 <td>{{ $employe->FonctEmp }}</td>
-                <td>{{ $employe->StatEmp }}</td>
+                <td>
+                    <span class="status-badge
+                        @switch($employe->StatEmp)
+                            @case('En activité') status-activite @break
+                            @case('En congé') status-conge @break
+                            @case('Suspendu') status-suspendu @break
+                            @case('En formation') status-formation @break
+                            @case('Retraité') status-retraite @break
+                            @case('Fin contrat') status-contrat @break
+                        @endswitch">
+                        {{ $employe->StatEmp }}
+                    </span>
+                </td>
+
                 <td>{{ $employe->ListActif }}</td>
-                <td>{{ $employe->CodeUser }}</td>
-                <td>{{ $logiciel->DatAchLog }}</td>
-                <td>{{ $logiciel->DatExpLog }}</td>
-                <td class="action-buttons">
-                    <!--<button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('User_Employe.show', $employe->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>-->
-                    <a href="{{ route('User_Employe.edit', $employes->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <form action="{{ route('User_Employe.destroy', $employes->id) }}" method="POST" style="display:inline">
+                <td>{{ $employe->service->utilisateur->NomCompUser }}</td>
+                <td>
+                    <!-- Modification de l'action avec un lien vers l'édition -->
+                    <a href="{{ route('User_Employe.edit', $employe->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <!-- Formulaire pour la suppression -->
+                    <form action="{{ route('User_Employe.destroy', $employe->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet actif ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
                     </form>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="text-center">Aucun utilisateur trouvé</td>
+                <td colspan="8" class="text-center">Aucun employé trouvé</td>
             </tr>
             @endforelse
         </tbody>

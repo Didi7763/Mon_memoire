@@ -4,7 +4,6 @@
 
 @section('custom-css-add')
 <style>
-
 .header-container {
         display: flex;
         justify-content: space-between;
@@ -27,9 +26,18 @@
     /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 70dvh;
+        overflow: auto;
+    }
+    .btn-primary{
+        margin: 1vh 0;
+    }
+    input[readonly] {
+    cursor: not-allowed;
+    background-color: #f0f0f0; /* Optionnel : Changer l'apparence pour montrer que c'est non modifiable */
     }
 </style>
 @endsection
@@ -42,23 +50,82 @@
 </div>
 
 <div class="form-container">
-    <form action="{{ route('donnees.update', $employes->id) }}" method="POST">
+    <form action="{{ route('User_Employe.update', $employe->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">
-            <label for="IdAct" class="form-label">ID Actif</label>
-            <input type="text" class="form-control" id="IdAct" name="IdAct" value="{{ $employes->IdAct }}" required>
+            <label for="CodeUser1">Code</label>
+            <input type="text" name="CodeUser1" id="CodeUser1" class="form-control" value="{{ $employe->utilisateur->CodeUser }}" required readonly>
         </div>
         <div class="mb-3">
-            <label for="FormatData" class="form-label">Format</label>
-            <input type="text" class="form-control" id="FormatData" name="FormatData" value="{{ $employes->FormatData }}" required>
+            <label for="NomCompUser">Nom et Prénoms</label>
+            <input type="text" name="NomCompUser" id="NomCompUser" class="form-control" value="{{ $employe->utilisateur->NomCompUser }}" required>
         </div>
         <div class="mb-3">
-            <label for="SourceData" class="form-label">Source</label>
-            <input type="text" class="form-control" id="SourceData" name="SourceData" value="{{ $employes->SourceData }}" required>
+            <label for="ContactUser">Contact</label>
+            <input type="tel" name="ContactUser" id="ContactUser" class="form-control" value="{{ $employe->utilisateur->ContactUser }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="EmailUser">Email</label>
+            <input type="email" name="EmailUser" id="EmailUser" class="form-control" value="{{ $employe->utilisateur->EmailUser  }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="FonctEmp">Fonction</label>
+            <input type="text" name="FonctEmp" id="FonctEmp" class="form-control" value="{{ $employe->FonctEmp }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="StatEmp">Statut</label>
+            <select name="StatEmp" id="StatEmp" class="form-control" required>
+                <option value="" disabled {{ empty($employe->StatEmp) ? 'selected' : '' }}>Sélection du statut</option>
+                <option value="En activité" {{ $employe->StatEmp === 'En activité' ? 'selected' : '' }}>
+                    En activité
+                </option>
+                <option value="En congé" {{ $employe->StatEmp === 'En congé' ? 'selected' : '' }}>
+                    En congé
+                </option>
+                <option value="Suspendu" {{ $employe->StatEmp === 'Suspendu' ? 'selected' : '' }}>
+                    Suspendu
+                </option>
+                <option value="En formation" {{ $employe->StatEmp === 'En formation' ? 'selected' : '' }}>
+                    En formation
+                </option>
+                <option value="Retraité" {{ $employe->StatEmp === 'Retraité' ? 'selected' : '' }}>
+                    Retraité
+                </option>
+                <option value="Fin contrat" {{ $employe->StatEmp === 'Fin contrat' ? 'selected' : '' }}>
+                    Fin de contrat
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="CodeUser">Service</label>
+            <select class="form-select" id="CodeUser" name="CodeUser" required>
+                <option value="" disabled {{ empty($employe->CodeUser) ? 'selected' : '' }}>-- Sélectionnez le service --</option>
+                @foreach ($services as $service)
+                    <option value="{{ $service->CodeUser }}"
+                        {{ $service->CodeUser === $employe->CodeUser ? 'selected' : '' }}>
+                        {{ $service->utilisateur->NomCompUser }}
+                    </option>
+                @endforeach
+            </select>
+
+        </div>
+        <div class="mb-3">
+            <label for="ListActif">Liste d'actifs obligatoires</label>
+            <textarea name="ListActif" id="ListActif" class="form-control" rows="2">{{ $employe->ListActif }}</textarea>
         </div>
         <!-- Ajoutez les autres champs ici -->
         <button type="submit" class="btn btn-primary">Enregistrer</button>
+        @if ($errors->any())
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </form>
 </div>
 

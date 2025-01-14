@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $table = 'services';
-    protected $primaryKey = 'CodeUser';
-    public $incrementing = false;
+    protected $primaryKey = 'id';
+    public $incrementing = true;
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -22,5 +22,11 @@ class Service extends Model
     {
         return $this->belongsTo(Utilisateur::class, 'CodeUser', 'CodeUser');
     }
+    public function employes()
+{
+    return $this->hasMany(Employe::class, 'CodeUser', 'CodeUser');
+}
+
+
 
 }

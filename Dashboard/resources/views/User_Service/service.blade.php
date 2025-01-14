@@ -79,38 +79,32 @@ Liste des services
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Codes</th>
+                <th>Code</th>
+                <th>Nom du service</th>
                 <th>Description</th>
-                <th>Nom du Responsable</th>
-                <th>Liste des actifs</th>
-                <th>Fonction</th>
-                <th>Statut</th>
-                <th>Liste des actifs</th>
-                <th>Services</th>
+                <th>Responsable</th>
+                <th>Contact</th>
+                <th>Email</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse($services as $service)
             <tr>
-                <td>{{ $service->CodeUser }}</td>
+                <td>{{ $service->utilisateur->CodeUser }}</td>
+                <td>{{ $service->utilisateur->NomCompUser }}</td>
                 <td>{{ $service->DesServ }}</td>
                 <td>{{ $service->NpnomRespServ }}</td>
-                <td>{{ $employe->ListActif }}</td>
-                <td>{{ $employe->CodeUser }}</td>
-                <td>{{ $logiciel->DatAchLog }}</td>
-                <td>{{ $logiciel->DatExpLog }}</td>
-                <td class="action-buttons">
-                    <!--<button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('User_Employe.show', $employe->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>-->
-                    <a href="{{ route('User_Service.edit', $services->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <form action="{{ route('User_Service.destroy', $services->id) }}" method="POST" style="display:inline">
+                <td>{{ $service->utilisateur->ContactUser }}</td>
+                <td>{{ $service->utilisateur->EmailUser }}</td>
+                <td>
+                    <!-- Modification de l'action avec un lien vers l'édition -->
+                    <a href="{{ route('User_Service.edit', $service->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <!-- Formulaire pour la suppression -->
+                    <form action="{{ route('User_Service.destroy', $service->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
                     </form>
                 </td>
             </tr>

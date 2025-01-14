@@ -52,26 +52,41 @@ class FournisseurController extends Controller
         return view('fournisseurs.edit', compact('fournisseurs'));
     }
 
-    // Mettre à jour un fournisseur existant
-    public function update(Request $request, $IdFour)
-    {
-        $fournisseurs = Fournisseur::findOrFail($IdFour);
+   // Mettre à jour un fournisseur existant
+public function update(Request $request, $IdFour)
+{
+    // Trouver le fournisseur
+    $fournisseur = Fournisseur::where('IdFour', $IdFour)->firstOrFail();
 
-        $request->validate([
-            'IdFour' => "required|unique:fournisseurs,IdFour,$IdFour",
-            'NomFour' => 'required|string|max:255',
-            'ContFour' => 'required|string|max:255',
-            'EmailFour' => 'required|email|max:255',
-            'AdressFour' => 'required|string',
-            'NomPersCont' => 'required|string|max:255',
-            'TypProdFournit' => 'required|string',
-            'NotesFour' => 'nullable|string',
-        ]);
+    // Validation des données entrantes
+    $request->validate([
+        'IdFour' => "required|unique:fournisseurs,IdFour,{$fournisseur->IdFour},IdFour",
+        'NomFour' => 'required|string|max:255',
+        'ContFour' => 'required|string|max:255',
+        'EmailFour' => 'required|email|max:255',
+        'AdressFour' => 'required|string',
+        'NomPersCont' => 'required|string|max:255',
+        'TypProdFournit' => 'required|string',
+        'NotesFour' => 'nullable|string',
+    ]);
 
-        $fournisseurs->update($request->all());
+    // Mise à jour des données
+    $fournisseur->update([
+        'IdFour' => $request->IdFour,
+        'NomFour' => $request->NomFour,
+        'ContFour' => $request->ContFour,
+        'EmailFour' => $request->EmailFour,
+        'AdressFour' => $request->AdressFour,
+        'NomPersCont' => $request->NomPersCont,
+        'TypProdFournit' => $request->TypProdFournit,
+        'NotesFour' => $request->NotesFour,
+    ]);
 
-        return redirect()->route('fournisseurs.index')->with('success', 'Le fournisseur a été mis à jour avec succès.');
-    }
+    // Redirection avec message de succès
+    return redirect()
+        ->route('fournisseurs.index')
+        ->with('success', 'Le fournisseur a été mis à jour avec succès.');
+}
 
     // Supprimer un fournisseur
     public function destroy($IdFour)

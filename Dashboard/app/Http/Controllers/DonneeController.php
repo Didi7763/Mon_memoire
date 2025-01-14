@@ -6,6 +6,8 @@ use App\Models\Donnee;
 use App\Models\Actif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class DonneeController extends Controller
 {
@@ -19,147 +21,139 @@ class DonneeController extends Controller
     {
         return view('donnees.create');
     }
+
     public function store(Request $request)
     {
-        // Valider les données entrantes
+        DB::enableQueryLog();
+
         $validated = $request->validate([
-            'IdAct' => 'required|string|max:255|unique:actifs,IdAct',
+            'IdAct' => 'required|string|unique:actifs,IdAct', // Validation de l'unicité pour IdAct
             'NomAct' => 'required|string|max:255',
-            'ComtAct' => 'nullable|string',
+            'ComtAct' => 'nullable|string|max:500',
             'FormatData' => 'required|string|max:255',
             'SourceData' => 'required|string|max:255',
-            'ResponsableData' => 'required|string|max:255',
-            'NivSensData' => 'required|string|in:Public,Interne,Confidentiel,Discrets',
-            'StatData' => 'required|string|in:en création,active,stockée,obsolète,supprimée',
+            'ResponsabeData' => 'nullable|string|max:255',
+            'NivSensData' => 'nullable|string|max:50',
+            'StatData' => 'nullable|string|max:50',
         ]);
 
         try {
-            // Début d'une transaction
             DB::beginTransaction();
 
-            // Création de l'actif
-            $actif = Actif::create([
-                'IdAct' => $validated['IdAct'],
-                'NomAct' => $validated['NomAct'],
-                'ComtAct' => $validated['ComtAct'] ?? null,
-            ]);
+                // Création de l'actif
+            $actif = new Actif();
+            $actif->IdAct = $validated['IdAct']; // ID de l'actif, vérifie que cela est unique si nécessaire
+            $actif->NomAct = $validated['NomAct'];
+            $actif->ComtAct = $validated['ComtAct'] ?? null;
+            $actif->save(); // Sauvegarde de l'actif
 
-            // Vérifier si l'actif a été créé avec succès
-            if (!$actif) {
-                throw new \Exception('Échec lors de la création de l\'actif.');
-            }
+            // Création de la donnée associée à cet actif
+            $donnee = new Donnee();
+            $donnee->IdAct = $actif->IdAct; // Utilisation de l'ID de l'actif créé pour la donnée
+            $donnee->FormatData = $validated['FormatData'];
+            $donnee->SourceData = $validated['SourceData'];
+            $donnee->ResponsabeData = $validated['ResponsabeData'];
+            $donnee->NivSensData = $validated['NivSensData'];
+            $donnee->StatData = $validated['StatData'];
+            $donnee->DatRecpData = now(); // Utilisation de la date et heure actuelles pour la réception
+            $donnee->DatMajData = now(); // Utilisation de la date et heure actuelles pour la mise à jour
+            $donnee->save(); // Sauvegarde de la donnée
 
-            // Création de la donnée associée
-            $donnee = Donnee::create([
-                'IdActif' => $validated['IdAct'],
-                'FormatData' => $validated['FormatData'],
-                'SourceData' => $validated['SourceData'],
-                'ResponsableData' => $validated['ResponsableData'],
-                'NivSensData' => $validated['NivSensData'],
-                'StatData' => $validated['StatData'],
-                'DatRecpData' => now(),
-                'DatMajData' => now(),
-            ]);
+                // Tu pourrais également utiliser la relation entre Actif et Donnee si tu les as définies dans tes modèles
 
-            // Vérifier si la donnée a été créée avec succès
-            if (!$donnee) {
-                throw new \Exception('Échec lors de la création de la donnée.');
-            }
 
-            // Valider la transaction
             DB::commit();
 
-            // Rediriger avec un message de succès
+            error_log(print_r(DB::getQueryLog(), true));
+
             return redirect()
                 ->route('donnees.index')
                 ->with('success', 'Actif de données ajouté avec succès.');
         } catch (\Exception $e) {
-            // Annuler la transaction en cas d'erreur
             DB::rollBack();
+            error_log('Erreur lors de l\'insertion : ' . $e->getMessage());
+            error_log($e->getTraceAsString());
 
-            // Rediriger avec un message d'erreur
             return redirect()
                 ->back()
                 ->withInput()
                 ->with('error', 'Erreur lors de l\'ajout : ' . $e->getMessage());
         }
     }
-
-
     public function edit(Donnee $donnee)
     {
-        $actif = Actif::where('IdAct', $donnee->IdActif)->firstOrFail();
+        // Récupérer l'actif associé à la donnée, sinon générer une exception 404 si non trouvé
+        $actif = Actif::where('IdAct', $donnee->IdAct)->first(); // Modification ici
+
+        // Vérifiez si l'actif existe, sinon redirigez avec un message d'erreur
+        if (!$actif) {
+            return redirect()->route('donnees.index')
+                             ->with('error', 'Actif associé non trouvé.');
+        }
+
+        // Retourner la vue d'édition avec les données
         return view('donnees.edit', compact('donnee', 'actif'));
     }
 
-    public function update(Request $request, Donnee $donnee)
-    {
-        $validated = $request->validate([
-            'NomAct' => 'required|string|max:255',
-            'ComtAct' => 'nullable|string',
-            'FormatData' => 'required|string|max:255',
-            'SourceData' => 'required|string|max:255',
-            'ResponsableData' => 'required|string|max:255',
-            'NivSensData' => 'required|string|in:Public,Interne,Confidentiel,Discrets',
-            'StatData' => 'required|string|in:en création,active,stockée,obsolète,supprimée',
+    public function update(Request $request, $id)
+{
+    DB::beginTransaction();
+
+    try {
+        // Récupérer les données
+        $donnee = Donnee::with('actif')->findOrFail($id);
+
+        // Mettre à jour les données de l'actif
+        $donnee->actif->update([
+            'NomAct' => $request->NomAct,
+            'ComtAct' => $request->ComtAct,
         ]);
 
-        try {
-            DB::beginTransaction();
+        // Mettre à jour les données de la table donnees
+        $donnee->update([
+            'FormatData' => $request->FormatData,
+            'SourceData' => $request->SourceData,
+            'ResponsabeData' => $request->ResponsabeData,
+            'NivSensData' => $request->NivSensData,
+            'StatData' => $request->StatData,
+        ]);
 
-            // Mise à jour de l'actif
-            $actif = Actif::where('IdAct', $donnee->IdActif)->firstOrFail();
-            $actif->NomAct = $validated['NomAct'];
-            $actif->ComtAct = $validated['ComtAct'] ?? null;
-            $actif->save();
+        DB::commit();
 
-            // Mise à jour de la donnée
-            $donnee->FormatData = $validated['FormatData'];
-            $donnee->SourceData = $validated['SourceData'];
-            $donnee->ResponsableData = $validated['ResponsableData'];
-            $donnee->NivSensData = $validated['NivSensData'];
-            $donnee->StatData = $validated['StatData'];
-            $donnee->DatMajData = now();
-            $donnee->save();
-
-            DB::commit();
-
-            return redirect()
-                ->route('donnees.index')
-                ->with('success', 'Actif de données mis à jour avec succès.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
-        }
+        return redirect()->route('donnees.index')->with('success', 'Données mises à jour avec succès.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
     }
+}
+
 
     public function destroy(Donnee $donnee)
-    {
-        try {
-            DB::beginTransaction();
+{
+    try {
+        DB::beginTransaction();
 
-            // Suppression de l'actif associé
-            Actif::where('IdAct', $donnee->IdActif)->delete();
-            // La donnée sera automatiquement supprimée si vous avez configuré
-            // la contrainte de clé étrangère avec onDelete('cascade')
+        // Suppression de l'actif associé
+        $actif = Actif::where('IdAct', $donnee->IdAct)->first();
 
-            DB::commit();
-
-            return redirect()
-                ->route('donnees.index')
-                ->with('success', 'Actif de données supprimé avec succès.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()
-                ->back()
-                ->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        if ($actif) {
+            $actif->delete(); // Suppression de l'actif si trouvé
         }
+
+        // Suppression de la donnée
+        $donnee->delete();
+
+        DB::commit();
+
+        return redirect()
+            ->route('donnees.index')
+            ->with('success', 'Donnée et actif supprimés avec succès.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()
+            ->back()
+            ->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
     }
+}
+
 }

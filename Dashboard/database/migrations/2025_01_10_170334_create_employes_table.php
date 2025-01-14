@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('CodeUser1');
             $table->string('FonctEmp');
             $table->string('StatEmp');
-            $table->text('ListActif');
+            $table->string('ListActif');  // Vous pouvez ajuster selon vos besoins
             $table->string('CodeUser');
+
+            $table->foreign('CodeUser1')->references('CodeUser')->on('utilisateurs')->onDelete('cascade');
+            $table->foreign('CodeUser')->references('CodeUser')->on('services')->onDelete('cascade');
             $table->timestamps();
-        
-            $table->foreign('CodeUser')->references('CodeUser')->on('utilisateurs')->onDelete('cascade');
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employe');
+        Schema::dropIfExists('employes');
     }
 };

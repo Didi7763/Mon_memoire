@@ -6,6 +6,7 @@
 @section('custom-css-add')
 <style>
 
+
 .header-container {
         display: flex;
         justify-content: space-between;
@@ -28,9 +29,14 @@
     /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 70dvh;
+        overflow: auto;
+    }
+    .btn-primary{
+        margin: 1vh 0;
     }
 </style>
 @endsection
@@ -44,41 +50,76 @@
 <div class="form-container">
     <form action="{{ route('logiciel.store') }}" method="POST">
         @csrf
+        <div class="mb-3">
+            <label for="IdAct" class="form-label">ID Actif</label>
+            <input type="text" class="form-control" id="IdAct" name="IdAct" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="NomAct" class="form-label">Nom du logiciel</label>
+            <input type="text" class="form-control" id="NomAct" name="NomAct" required>
+        </div>
+
         <div class="form-group">
-            <label for="NomAct">Nom</label>
-            <input type="text" name="NomAct" id="NomAct" class="form-control" required>
+            <label for="VersionLog">Version du logiciel</label>
+            <input type="text" name="VersionLog" id="VersionLog" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="MarqMat">Marque</label>
-            <input type="text" name="MarqMat" id="MarqMat" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="ModMarq">Modèle</label>
-            <input type="text" name="ModMarq" id="ModMarq" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="NumSerieMat">Numéro de Série</label>
-            <input type="text" name="NumSerieMat" id="NumSerieMat" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="QteMat">Quantité</label>
-            <input type="number" name="QteMat" id="QteMat" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="StatMat">Statut</label>
-            <select name="StatMat" id="StatMat" class="form-control">
-                <option value="En stock">En stock</option>
-                <option value="Affecté">Affecté</option>
-                <option value="Panne">Panne</option>
-                <option value="Réparation">Réparation</option>
-                <option value="Réformé">Réformé</option>
+            <label for="TypLicLog">Type de licence</label>
+            <select name="TypLicLog" id="TypLicLog" class="form-control">
+                <option value="Libre">Logiciel Libre (Open Source)</option>
+                <option value="Propriétaire">Logiciel Propriétaire</option>
+                <option value="Gratuiciel">Logiciel Gratuiciel</option>
+                <option value="SaaS">Licence Saas</option>
+                <option value="Réseau">Licence Réseau</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="DatAcqMat">Date d'acquisition</label>
-            <input type="date" name="DatAcqMat" id="DatAcqMat" class="form-control" required>
+            <label for="NbrLicLog">Nombre de licence</label>
+            <input type="number" name="NbrLicLog" id="NbrLicLog" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="NbrMinLicLog">Nombre minimal de licence</label>
+            <input type="number" name="NbrMinLicLog" id="NbrMinLicLog" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="CleLicLog">Clé de licence</label>
+            <input type="text" name="CleLicLog" id="CleLicLog" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="DatAchLog">Date d'installation</label>
+            <input type="date" name="DatAchLog" id="DatAchLog" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="DatExpLog">Date d'expiration de Licence</label>
+            <input type="date" name="DatExpLog" id="DatExpLog" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="IdFour">Fournisseur</label>
+            <select class="form-select" id="IdFour" name="IdFour" required>
+                <option value="" disabled selected>-- Sélectionnez le fournisseur --</option>
+                @foreach ($fournisseurs as $fournisseur)
+                    <option value="{{ $fournisseur->IdFour }}">{{ $fournisseur->NomFour }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ComtAct">Commentaire</label>
+            <textarea name="ComtAct" id="ComtAct" class="form-control" ></textarea>
         </div>
         <button type="submit" class="btn btn-success mt-3">Ajouter</button>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     </form>
 </div>
 @endsection

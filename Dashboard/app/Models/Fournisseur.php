@@ -27,5 +27,11 @@ class Fournisseur extends Model
         'NomPersCont',
         'NotesFour',
     ];
+
+    public function materiels()
+    {
+        // 'IdFour' dans Materiel est la clé étrangère
+        return $this->hasMany(Materiel::class, 'IdFour', 'IdFour');
+    }
 }
 

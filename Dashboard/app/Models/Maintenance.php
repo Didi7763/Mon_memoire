@@ -14,6 +14,8 @@ class Maintenance extends Model
     public $incrementing = true;
     protected $keyType = 'integer';
 
+    public $timestamps = true;
+    
     // Colonnes pouvant être massivement assignées
     protected $fillable = [
         'NumMaint',

@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('CodeUser');
             $table->string('DesServ');
             $table->string('NpnomRespServ');
-            $table->timestamps();
-        
+
+            // Ajouter la contrainte de clé étrangère pour 'CodeUser' vers 'utilisateurs'
             $table->foreign('CodeUser')->references('CodeUser')->on('utilisateurs')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('service');
+        Schema::dropIfExists('services');
     }
 };

@@ -6,6 +6,10 @@ Liste des Actifs Matériels
 
 @section('custom-css-add')
 <style>
+    .right-panel{
+        overflow: hidden;
+        overflow-y: none;
+    }
     .header-container {
         display: flex;
         justify-content: space-between;
@@ -16,6 +20,7 @@ Liste des Actifs Matériels
         background: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        width:78vw;
     }
 
     .btn-add {
@@ -30,13 +35,15 @@ Liste des Actifs Matériels
         padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        width:78vw;
     }
 
     .status-badge {
-        padding: 0.5rem 1rem;
+        padding: 0.2rem 0.5rem;
         border-radius: 20px;
         font-size: 0.875rem;
         font-weight: 500;
+        margin: 0;
     }
 
     .status-stock { background: #e3f2fd; color: #1976d2; }
@@ -80,6 +87,8 @@ Liste des Actifs Matériels
 @endsection
 
 @section('main-content')
+
+
 <div class="header-container">
     <h2>Liste des Actifs Matériels</h2>
     <a href="{{ route('materiel.create') }}" class="btn btn-primary btn-add">
@@ -92,26 +101,28 @@ Liste des Actifs Matériels
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Identifiant</th>
                 <th>Nom</th>
                 <th>Marque</th>
                 <th>Modèle</th>
                 <th>N° Série</th>
-                <th>Quantité</th>
                 <th>Statut</th>
-                <th>Date d'acquisition</th>
+                <th>Date de reception</th>
+                <th>Délai d'utilisation</th>
+                <th>Fournisseur</th>
+                <th>Catégorie</th>
+                <th>Commentaire</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse($materiels as $materiel)
             <tr>
-                <td>{{ $materiel->IdAct }}</td>
-                <td>{{ $materiel->NomAct }}</td>
+                <td>{{ $materiel->actif->IdAct }}</td>
+                <td>{{ $materiel->actif->NomAct }}</td>
                 <td>{{ $materiel->MarqMat }}</td>
                 <td>{{ $materiel->ModMarq }}</td>
                 <td>{{ $materiel->NumSerieMat }}</td>
-                <td>{{ $materiel->QteMat }}</td>
                 <td>
                     <span class="status-badge
                         @switch($materiel->StatMat)
@@ -124,28 +135,27 @@ Liste des Actifs Matériels
                         {{ $materiel->StatMat }}
                     </span>
                 </td>
-                <td>{{ $materiel->DatAcqMat }}</td>
-                <td class="action-buttons">
-                    <!--<button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('materiels.show', $materiel->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>-->
-                    <a href="{{ route('donnees.edit', $materiels->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-
-                    <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet actif ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
+                <td>{{ \Carbon\Carbon::parse($materiel->DatAcqMat )->format('d/m/Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($materiel->DatAcqMat)->addYears($materiel->DureVieMat)->format('d/m/Y') }}</td>
+                <td>{{ $materiel->fournisseur->NomFour }}</td>
+                <td>{{ $materiel->categorie->NomCatMat }}</td>
+                <td>{{ $materiel->actif->ComtAct }}</td>
+                    <td class="action-buttons">
+                        <a href="{{route('materiel.edit', $materiel->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
             @empty
-            <tr>
-                <td colspan="9" class="text-center">Aucun actif matériel trouvé</td>
-            </tr>
+                <tr>
+                    <td colspan="9" class="text-center">Aucun actif matériel trouvé</td>
+                </tr>
             @endforelse
         </tbody>
+
     </table>
 
     @if($materiels->hasPages())
@@ -154,4 +164,5 @@ Liste des Actifs Matériels
     </div>
     @endif
 </div>
+
 @endsection

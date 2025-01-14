@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id('NumHist');
             $table->date('DatAction');
             $table->text('DesAction');
-            $table->unsignedBigInteger('IdAct');
+            $table->string('IdAct');  // Créer la colonne 'IdAct' de type string
+            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');  // Définir la clé étrangère
             $table->timestamps();
-        
-            $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('historique');
+        Schema::dropIfExists('historiques');
     }
 };

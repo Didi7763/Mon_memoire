@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id('NumMaint');
-            $table->text('DesMaint');
+            $table->string('DesMaint');
             $table->string('TypMaint');
             $table->date('DatMaint');
             $table->string('NomTechMaint');
-            $table->decimal('CoutMaint', 10, 2);
-            $table->date('DatProchMaint');
+            $table->decimal('CoutMaint', 8, 2);
+            $table->date('DatProchMaint')->nullable();
             $table->text('ComtMaint');
-            $table->unsignedBigInteger('IdAct');
-            $table->timestamps();
-        
+            $table->string('IdAct');
+
             $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('maintenance');
+        Schema::dropIfExists('maintenances');
     }
 };

@@ -12,10 +12,11 @@ use App\Http\Controllers\DonneeController;
 use App\Http\Controllers\LogicielController;
 use App\Http\Controllers\AttribuerController;
 use App\Http\Controllers\AttributionController;
+use App\Http\Controllers\CategorieController;
 use App\Models\Employe;
 use App\Models\Maintenance;
 
-Route::get('//', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('//', [DashboardController::class, 'index'])->name('mondash');
 // Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
@@ -24,8 +25,11 @@ Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name(
 Route::get('/actif-logiciel', [LogicielController::class, 'index'])->name('actif-logiciel');
 
 
-Route::get('/mondash', [DashboardController::class, 'index'])->name('mondash');
+Route::any('/mondash', [DashboardController::class, 'index'])->name('mondash');
 
+use App\Http\Controllers\ActifController;
+
+Route::get('donnees.actif-data', [ActifController::class, 'afficherActifs']);
 
 
 /*Route::get('/actif-materiel', function () {
@@ -82,6 +86,9 @@ Route::resource('fournisseurs', controller: FournisseurController::class);
 Route::resource('maintenance', controller: MaintenanceController::class);
 
 Route::resource('attributions', controller: AttribuerController::class);
+
+Route::resource('categorie', controller: CategorieController::class);
+
 
 Route::resource('historiques', HistoriqueController::class);
 

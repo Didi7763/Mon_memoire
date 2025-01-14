@@ -71,8 +71,8 @@
 
 
         <div class="mb-3">
-            <label for="ResponsableData" class="form-label">Responsable</label>
-            <input type="text" class="form-control" id="ResponsableData" name="ResponsableData" required>
+            <label for="ResponsabeData" class="form-label">Responsable</label>
+            <input type="text" class="form-control" id="ResponsabeData" name="ResponsabeData" required>
         </div>
 
         <div class="mb-3">
@@ -106,8 +106,19 @@
 
         <!-- Ajoutez les autres champs ici -->
         <button type="submit" class="btn btn-primary">Ajouter</button>
+
+        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     </form>
 </div>
+
 
 
 @endsection

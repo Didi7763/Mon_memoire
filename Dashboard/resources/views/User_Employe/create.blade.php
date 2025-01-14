@@ -45,40 +45,62 @@
     <form action="{{ route('User_Employe.store') }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="NomAct">Nom</label>
-            <input type="text" name="NomAct" id="NomAct" class="form-control" required>
+            <label for="CodeUser1">Code</label>
+            <input type="text" name="CodeUser1" id="CodeUser1" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="MarqMat">Marque</label>
-            <input type="text" name="MarqMat" id="MarqMat" class="form-control" required>
+            <label for="NomCompUser">Nom et Prénoms</label>
+            <input type="text" name="NomCompUser" id="NomCompUser" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="ModMarq">Modèle</label>
-            <input type="text" name="ModMarq" id="ModMarq" class="form-control" required>
+            <label for="ContactUser">Contact</label>
+            <input type="tel" name="ContactUser" id="ContactUser" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="NumSerieMat">Numéro de Série</label>
-            <input type="text" name="NumSerieMat" id="NumSerieMat" class="form-control" required>
+            <label for="EmailUser">Email</label>
+            <input type="email" name="EmailUser" id="EmailUser" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="QteMat">Quantité</label>
-            <input type="number" name="QteMat" id="QteMat" class="form-control" required>
+            <label for="FonctEmp">Fonction</label>
+            <input type="text" name="FonctEmp" id="FonctEmp" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="StatMat">Statut</label>
-            <select name="StatMat" id="StatMat" class="form-control">
-                <option value="En stock">En stock</option>
-                <option value="Affecté">Affecté</option>
-                <option value="Panne">Panne</option>
-                <option value="Réparation">Réparation</option>
-                <option value="Réformé">Réformé</option>
+            <label for="StatEmp">Statut</label>
+            <select name="StatEmp" id="StatEmp" class="form-control" required>
+                <option value="" disabled selected>-- Sélectionner le statut de l'employé --</option>
+                <option value="En activité">En activité</option>
+                <option value="En congé">En congé</option>
+                <option value="Suspendu">Suspendu</option>
+                <option value="En formation">En formation</option>
+                <option value="Retraité">Retraité</option>
+                <option value="Fin contrat">Fin de contrat</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="DatAcqMat">Date d'acquisition</label>
-            <input type="date" name="DatAcqMat" id="DatAcqMat" class="form-control" required>
+            <label for="CodeUser">Service</label>
+            <select class="form-select" id="CodeUser" name="CodeUser" required>
+                <option value="" disabled selected>-- Sélectionnez le service --</option>
+                @foreach ($services as $service)
+                    <option value="{{ $service->CodeUser }}">{{ $service->utilisateur->NomCompUser }}</option>
+                @endforeach
+            </select>
         </div>
+        <div class="form-group">
+            <label for="ListActif">Liste d'actifs obligatoires</label>
+            <textarea name="ListActif" id="ListActif" class="form-control" rows="4"></textarea>
+        </div>
+
         <button type="submit" class="btn btn-success mt-3">Ajouter</button>
+
+        @if ($errors->any())
+        <div class="alert alert-danger mt-3">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </form>
 </div>
 @endsection

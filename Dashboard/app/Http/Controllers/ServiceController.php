@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\Utilisateur;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
-    /// Afficher la liste des employés
+    // Afficher la liste des services
     public function index()
     {
         $services = Service::paginate(10); // Pagination pour limiter les résultats
@@ -20,61 +23,114 @@ class ServiceController extends Controller
         return view('User_Service.create');
     }
 
-    // Enregistrer un nouvel employé
+    // Enregistrer un nouveau service
     public function store(Request $request)
     {
         // Valider les données reçues
         $validated = $request->validate([
-            'CodeUser' => 'required|string|max:255|exists:utilisateurs,CodeUser', // Clé primaire de Employe (doit exister dans la table Utilisateurs)
+            'CodeUser' => 'required|string|max:255', // Clé primaire de Utilisateur (doit exister dans la table Utilisateurs)
+            'NomCompUser' => 'required|string|max:255',
             'DesServ' => 'required|string|max:255',
-            'NpnomRespServ' => 'required|string|max:50'
+            'NpnomRespServ' => 'required|string|max:80',
+            'ContactUser' => 'required|string',
+            'EmailUser' => 'required|string|email',
         ]);
 
-        // Créer un nouvel employé
-        Service::create([
-            'CodeUser' => $validated['CodeUser'],
-            'DesServ' => $validated['DesServ'],
-            'NpnomRespServ' => $validated['NpnomRespServp'],
-        ]);
+        // Création de l'utilisateur
+        $utilisateur = new Utilisateur();
+        $utilisateur->CodeUser = $validated['CodeUser'];
+        $utilisateur->NomCompUser = $validated['NomCompUser'];
+        $utilisateur->ContactUser = $validated['ContactUser'];
+        $utilisateur->EmailUser = $validated['EmailUser'];
+        $utilisateur->save(); // Sauvegarde de l'utilisateur
+
+        // Création d'un nouveau service
+        $service = new Service();
+        $service->CodeUser = $utilisateur->CodeUser;
+        $service->DesServ = $validated['DesServ'];
+        $service->NpnomRespServ = $validated['NpnomRespServ'];
+        $service->save(); // Sauvegarde dans la table services
 
         // Rediriger avec un message de succès
         return redirect()->route('User_Service.index')->with('success', 'Le service a été ajouté avec succès.');
     }
 
-    // Afficher le formulaire de modification
-    public function edit(Service $service)
-    {
-        return view('User_Service.edit', compact('services'));
-    }
 
-    // Mettre à jour un employé existant
-    public function update(Request $request, Service $service)
-    {
-        // Valider les données reçues
-        $validated = $request->validate([
-            'CodeUser' => 'required|exists:utilisateurs,CodeUser', // Vérifie que l'utilisateur existe
-            'DesServ' => 'required|string|max:255',
-            'NpnomRespServ' => 'required|string|max:50',
+    public function edit($id)
+{
+    $service = Service::findOrFail($id);
+    return view('User_Service.edit', compact('service'));
+}
+
+
+
+public function update(Request $request, $id)
+{
+    DB::beginTransaction();
+
+    try {
+        // Récupérer les données
+        $service = Service::with('utilisateur')->findOrFail($id);
+
+        // Mettre à jour les données de l'actif
+        $service->utilisateur->update([
+            'NomCompUser' => $request->NomCompUser,
+            'ContactUser' => $request->ContactUser,
+            'EmailUser' => $request->EmailUser,
         ]);
 
-        // Mettre à jour l'employé
+        // Mettre à jour les données de la table donnees
         $service->update([
-            'CodeUser' => $validated['CodeUser'],
-            'DesServ' => $validated['DesServ'],
-            'NpnomRespServ' => $validated['NonomRespServ'],
+            'DesServ' => $request->DesServ,
+            'NpnomRespServ' => $request->NpnomRespServ,
         ]);
 
-        // Rediriger avec un message de succès
-        return redirect()->route('User_Service.index')->with('success', 'Le service a été mis à jour avec succès.');
-    }
+        DB::commit();
 
-    // Supprimer un employé
-    public function destroy(Service $service)
-    {
-        // Supprimer l'employé
+        return redirect()->route('User_Service.index')->with('success', 'Le service a été mis à jour avec succès.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Erreur lors de la mise à jour : ' . $e->getMessage());
+    }
+}
+
+    // Supprimer un service
+
+    public function destroy($id)
+{
+    try {
+        DB::beginTransaction();
+
+        // Trouver le service par son ID
+        $service = Service::findOrFail($id);
+
+        // Trouver l'utilisateur lié au service via le CodeUser
+        $utilisateur = Utilisateur::where('CodeUser', $service->CodeUser)->first();
+
+        if ($utilisateur) {
+            // Supprimer l'utilisateur lié s'il existe
+            $utilisateur->delete();
+        }
+
+        // Supprimer le service
         $service->delete();
 
-        // Rediriger avec un message de succès
-        return redirect()->route('User_Service.index')->with('success', 'Service supprimé avec succès.');
+        DB::commit();
+
+        // Redirection avec un message de succès
+        return redirect()
+            ->route('User_Service.index')
+            ->with('success', 'Service et utilisateur supprimés avec succès.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        // Redirection avec un message d'erreur
+        return redirect()
+            ->back()
+            ->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
     }
+}
+
+
+
 }

@@ -28,10 +28,16 @@
     /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 70dvh;
+        overflow: auto;
     }
+    .btn-primary{
+        margin: 1vh 0;
+    }
+
 </style>
 @endsection
 
@@ -81,6 +87,15 @@
             <textarea name="NotesFour" id="NotesFour" class="form-control" ></textarea>
         </div>
         <button type="submit" class="btn btn-success mt-3">Ajouter</button>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     </form>
 </div>
 @endsection

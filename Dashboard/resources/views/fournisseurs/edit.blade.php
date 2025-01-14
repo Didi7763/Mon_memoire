@@ -4,30 +4,36 @@
 
 @section('custom-css-add')
 <style>
-    .header-container {
+.header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 3vh;
-        margin-bottom: 5vh;
-        padding: 2vh;
+        margin-top: 3dvh;
+        margin-bottom: 5dvh;
+        padding: 2dvh;
         background: #fff;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .form-container {
-        background: #fff;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-secondary {
-        padding: 0.5vh 1vw;
+    .btn-add {
+        padding: 0.5dvh 1dvw;
         display: flex;
         align-items: center;
-        gap: 0.5vw;
+        gap: 0.5dvw;
+    }
+
+    /* Personnalisation CSS pour le formulaire */
+    .form-container {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 70dvh;
+        overflow: auto;
+    }
+    .btn-primary{
+        margin: 1vh 0;
     }
 
     input[readonly] {

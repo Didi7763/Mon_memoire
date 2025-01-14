@@ -73,17 +73,31 @@
         </div>
         <div class="form-group">
             <label for="DatProchMaint">Date de prochaine maintenance</label>
-            <input type="text" class="form-control" name="DatProchMaint" id="DatProchMaint">
+            <input type="date" class="form-control" name="DatProchMaint" id="DatProchMaint">
         </div>
         <div class="form-group">
-            <label for="IdAct">Identifiant de l'actif</label>
-            <input type="text" class="form-control" name="IdAct" id="IdAct">
+            <label for="IdAct">Actif</label>
+            <select class="form-select" id="IdAct" name="IdAct" required>
+                <option value="" disabled selected>-- Sélectionnez un actif --</option>
+                @foreach ($actifs as $actif)
+                    <option value="{{ $actif->IdAct }}">{{ $actif->NomAct }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="form-group">
             <label for="ComtMaint">Commentaire</label>
             <textarea name="ComtMaint" id="ComtMaint" class="form-control" ></textarea>
         </div>
         <button type="submit" class="btn btn-success mt-3">Ajouter</button>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     </form>
 </div>
 @endsection

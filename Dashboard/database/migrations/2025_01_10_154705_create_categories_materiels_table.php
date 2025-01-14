@@ -9,24 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('categorie_materiels', function (Blueprint $table) {
-            $table->id('RefCatMat');
+            $table->string('RefCatMat')->primary();
             $table->string('NomCatMat');
-            $table->integer('QteStockMat');
-            $table->integer('QteMinStockMat');
+            $table->integer('QteStockMat')->default(0);
+            $table->integer('QteMinStockMat')->default(0);
             $table->text('NoteCatMat')->nullable();
             $table->timestamps();
         });
-        
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('categorie_materiel');
+        Schema::dropIfExists('categorie_materiels');
     }
 };

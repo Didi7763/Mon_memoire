@@ -21,12 +21,12 @@ class Utilisateur extends Model
     // Relation avec Employe
     public function employe()
     {
-        return $this->hasOne(Employe::class, 'CodeUser', 'CodeUser');
+        return $this->hasMany(Employe::class, 'CodeUser', 'CodeUser');
     }
 
     // Relation avec Service
     public function service()
     {
-        return $this->hasOne(Service::class, 'CodeUser', 'CodeUser');
+        return $this->hasMany(Service::class, 'CodeUser', 'CodeUser');
     }
 }

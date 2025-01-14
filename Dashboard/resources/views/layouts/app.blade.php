@@ -36,6 +36,7 @@
                     <li><a href="/donnees" class="{{ request()->routeIs('donnees.actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
                     <li><a href="{{ route('logiciel.index') }}" class="{{ request()->routeIs('logiciel.index') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
                     <li><a href="{{ route('actif-materiel') }}" class="{{ request()->routeIs('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
+                    <li><a href="{{ route('categorie.index') }}" class="{{ request()->routeIs('categorie.index') ? 'active' : '' }}"><i class="bi bi-card-checklist"></i>Catégorie matériel</a></li>
                 </ul>
             </li>
             <li class="has-submenu {{ request()->is('utilisateur*') ? 'active' : '' }}">

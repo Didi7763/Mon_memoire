@@ -5,6 +5,7 @@ html{
 body{
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 #sidebar{
     width: 20%;
@@ -74,6 +75,8 @@ ul ul li a.dropdown-item.active{
     width: 80dvw;
     display: flex;
     flex-direction: column;
+    overflow: none;
+    overflow: hidden;
 }
 .navbar-part{
     background-color: white;
@@ -190,3 +193,4 @@ ul ul li a.dropdown-item.active{
     padding-right: 10px; /* Pour ajouter un peu d'espace autour du défilement */
 
 }
+

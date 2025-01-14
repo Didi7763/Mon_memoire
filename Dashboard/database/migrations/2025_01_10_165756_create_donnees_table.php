@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('donnees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('IdAct');
+            $table->string('IdAct');
             $table->string('FormatData');
-            $table->string('SourceData');
+            $table->string('SourceData')->nullable();
             $table->string('ResponsabeData');
             $table->string('NivSensData');
             $table->string('StatData');
-            $table->date('DatRecpData');
-            $table->date('DatMajData');
-            $table->timestamps();
-        
+            $table->date('DatRecpData')->nullable();
+            $table->date('DatMajData')->nullable();
+             // Ajouter la contrainte de clé étrangère pour 'IdAct' vers 'actifs'
             $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('donnee');
+        Schema::dropIfExists('donnees');
     }
 };

@@ -4,36 +4,42 @@
 
 @section('custom-css-add')
 <style>
-    .header-container {
+
+.header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 3vh;
-        margin-bottom: 5vh;
-        padding: 2vh;
+        margin-top: 3dvh;
+        margin-bottom: 5dvh;
+        padding: 2dvh;
         background: #fff;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .form-container {
-        background: #fff;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-secondary {
-        padding: 0.5vh 1vw;
+    .btn-add {
+        padding: 0.5dvh 1dvw;
         display: flex;
         align-items: center;
-        gap: 0.5vw;
+        gap: 0.5dvw;
     }
 
+    /* Personnalisation CSS pour le formulaire */
+    .form-container {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 70dvh;
+        overflow: auto;
+    }
+    .btn-primary{
+        margin: 1vh 0;
+    }
     input[readonly] {
     cursor: not-allowed;
     background-color: #f0f0f0; /* Optionnel : Changer l'apparence pour montrer que c'est non modifiable */
-}
+    }
 </style>
 @endsection
 
@@ -104,25 +110,43 @@
         </div>
 
         <div class="mb-3">
-            <label for="DatProchMaint" class="form-label">Date de prochaine maintenance</label>
+            <label for="DatProchMaint">Date de prochaine maintenance</label>
             <input type="date" class="form-control" name="DatProchMaint" id="DatProchMaint"
-                   value="{{ $maintenance->DatProchMaint }}" required>
+            value="{{ $maintenance->DatProchMaint }}">
         </div>
 
         <div class="mb-3">
-            <label for="IdAct" class="form-label">Identifiant de l'actif</label>
-            <input type="text" class="form-control" name="IdAct" id="IdAct"
-                   value="{{ $maintenance->IdAct }}" required>
+            <label for="IdAct" class="form-label">Actif</label>
+            <select class="form-select" id="IdAct" name="IdAct" required>
+                <option value="" disabled>-- Sélectionnez un actif --</option>
+                @foreach ($actifs as $actif)
+                <!-- Comparaison de l'ID de l'actif sélectionné avec celui de la maintenance -->
+                <option value="{{ $actif->IdAct }}"
+                    {{ $maintenance->IdAct == $actif->IdAct ? 'selected' : '' }}>
+                    {{ $actif->NomAct }}
+                 </option>
+                @endforeach
+            </select>
+
         </div>
 
         <div class="mb-3">
             <label for="ComtMaint" class="form-label">Commentaire</label>
             <textarea name="ComtMaint" id="ComtMaint" class="form-control" rows="3">
-                {{  $fournisseurs->ComtMaint ?? '' }}
+                {{  $maintenance->ComtMaint ?? '' }}
             </textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Enregistrer</button>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     </form>
 </div>
 @endsection

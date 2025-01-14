@@ -80,36 +80,37 @@ Liste des Actifs Logiciels
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Nom</th>
                 <th>Version</th>
-                <th>Type de licence</th>
-                <th>Nombre de licences</th>
-                <th>Clé de licence</th>
-                <th>Date d'achat</th>
+                <th>Type</th>
+                <th>Nombre</th>
+                <th>Clé</th>
+                <th>Date d'installation</th>
                 <th>Date d'expiration</th>
+                <th>Commentaire</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @forelse($logiciels as $logiciel)
             <tr>
-                <td>{{ $logiciel->IdAct }}</td>
+                <td>{{ $logiciel->actif->IdAct }}</td>
+                <td>{{ $logiciel->actif->NomAct }}</td>
                 <td>{{ $logiciel->VersionLog }}</td>
                 <td>{{ $logiciel->TypLicLog }}</td>
                 <td>{{ $logiciel->NbrLicLog }}</td>
                 <td>{{ $logiciel->CleLicLog }}</td>
-                <td>{{ $logiciel->DatAchLog }}</td>
-                <td>{{ $logiciel->DatExpLog }}</td>
-                <td class="action-buttons">
-                    <!--<button class="action-btn btn-info" title="Voir" onclick="window.location.href='{{ route('logiciels.show', $logiciel->id) }}'">
-                        <i class="bi bi-eye"></i>
-                    </button>-->
-                    <a href="{{ route('logiciel.edit', $logiciels->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <form action="{{ route('logiciel.destroy', $logiciels->id) }}" method="POST" style="display:inline">
+                <td>{{ \Carbon\Carbon::parse($logiciel->DatAchLog)->format('d/m/Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($logiciel->DatExpLog)->format('d/m/Y') }}</td>
+                <td>{{ $logiciel->actif->ComtAct }}</td>
+                <td>
+                    <!-- Modification de l'action avec un lien vers l'édition -->
+                    <a href="{{ route('logiciel.edit', $logiciel->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <!-- Formulaire pour la suppression -->
+                    <form action="{{ route('logiciel.destroy', $logiciel->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="action-btn btn-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet actif ?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
                     </form>
                 </td>
             </tr>

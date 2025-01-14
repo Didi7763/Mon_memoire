@@ -80,9 +80,10 @@ Liste des Maintenances effectuées
         <thead>
             <tr>
                 <th>Numero</th>
+                <th>actifs</th>
                 <th>Description</th>
-                <th>Type de maintenance</th>
-                <th>Date de maintenance</th>
+                <th>Type</th>
+                <th>Date</th>
                 <th>Nom technicien</th>
                 <th>coût</th>
                 <th>Prochaine maintenance</th>
@@ -94,12 +95,13 @@ Liste des Maintenances effectuées
             @forelse($maintenances as $maintenance)
                 <tr>
                     <td>{{ $maintenance->NumMaint }}</td>
+                    <td>{{ $maintenance->actif->NomAct }}</td>
                     <td>{{ $maintenance->DesMaint }}</td>
                     <td>{{ $maintenance->TypMaint }}</td>
-                    <td>{{ $maintenance->DatMaint }}</td>
+                    <td>{{ \Carbon\Carbon::parse($maintenance->DatMaint)->format('d/m/Y') }}</td>
                     <td>{{ $maintenance->NomTechMaint }}</td>
-                    <td>{{ $maintenance->CoutMaint }}</td>
-                    <td>{{ $maintenance->DatProchMaint }}</td>
+                    <td>{{ number_format($maintenance->CoutMaint, 0, '.', ' ') }} FCFA</td>
+                    <td>{{ \Carbon\Carbon::parse($maintenance->DatProchMaint)->format('d/m/Y') }}</td>
                     <td>{{ $maintenance->ComtMaint }}</td>
                     <td class="action-buttons">
                         <a href="{{ route('maintenance.edit', $maintenance->NumMaint) }}" class="btn btn-warning btn-sm">Modifier</a>

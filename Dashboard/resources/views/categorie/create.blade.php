@@ -1,7 +1,7 @@
 <!-- resources/views/materiels/create.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Ajouter un service')
+@section('title', 'Ajouter une catégorie')
 
 @section('custom-css-add')
 <style>
@@ -37,36 +37,34 @@
 
 @section('main-content')
 <div class="header-container">
-    <h2>Formulaire d'utilisateur-service</h2>
-    <a href="{{ route('User_Service.index') }}" class="btn btn-secondary">Retour à la liste des services</a>
+    <h2>Formulaire de catégorie matériel</h2>
+    <a href="{{ route('categorie.index') }}" class="btn btn-secondary">Retour à la liste des catégories</a>
 </div>
 
 <div class="form-container">
-    <form action="{{ route('User_Service.store') }}" method="POST">
+    <form action="{{ route('categorie.store') }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="CodeUser">Code</label>
-            <input type="text" name="CodeUser" id="CodeUser" class="form-control" required>
+            <label for="RefCatMat">Reference de la catégorie</label>
+            <input type="text" class="form-control" name="RefCatMat" id="RefCatMat"  required>
         </div>
+
         <div class="form-group">
-            <label for="NomCompUser">Nom du service</label>
-            <input type="text" name="NomCompUser" id="NomCompUser" class="form-control" required>
+            <label for="NomCatMat">Nom de la catégorie</label>
+            <input type="text" class="form-control" name="NomCatMat" id="NomCatMat"  required>
         </div>
+        <!--<div class="form-group">
+            <label for="QteStockMat">Quantité en Stock</label>
+            <input type="number" class="form-control" name="QteStockMat" id="QteStockMat"  required>
+        </div>-->
         <div class="form-group">
-            <label for="DesServ">Description</label>
-            <input type="text" name="DesServ" id="DesServ" class="form-control" required>
+            <label for="QteMinStockMat">Quantité minimal en stock</label>
+            <input type="number" class="form-control" name="QteMinStockMat" id="QteMinStockMat"  required>
         </div>
+
         <div class="form-group">
-            <label for="NpnomRespServ">Responsable</label>
-            <input type="text" name="NpnomRespServ" id="NpnomRespServ" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="ContactUser">Contact</label>
-            <input type="tel" name="ContactUser" id="ContactUser" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="EmailUser">Email</label>
-            <input type="email" name="EmailUser" id="EmailUser" class="form-control" required>
+            <label for="NoteCatMat">Commentaire</label>
+            <textarea name="NoteCatMat" id="NoteCatMat" class="form-control" ></textarea>
         </div>
         <button type="submit" class="btn btn-success mt-3">Ajouter</button>
         @if ($errors->any())
