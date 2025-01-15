@@ -27,40 +27,119 @@
 <body>
     <!-- Sidebar -->
     <div class="w3-sidebar w3-bar-block" id="sidebar">
-        <h3 class="w3-bar-item">CARENA</h3>
+        <!--<h3 class="w3-bar-item">CARENA</h3>-->
+        <img src="{{ asset('images/logo_carena-removebg-preview.png') }}" alt="Description de l'image" srcset="">
+
         <ul>
-            <li><a href="{{ route('mondash') }}" class="{{ request()->routeIs('mondash') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i>Tableau de bord</a></li>
-            <li class="has-submenu {{ request()->is('actif*') ? 'active' : '' }}">
-                <a href="#" class="{{ request()->is('actif*') ? 'active' : '' }}"><i class="bi bi-display"></i>Actifs</a>
+            <!-- Tableau de bord -->
+            <li>
+                <a href="{{ route('mondash') }}" class="{{ request()->routeIs('mondash') ? 'active' : '' }}">
+                    <i class="bi bi-speedometer2"></i>Tableau de bord
+                </a>
+            </li>
+
+            <!-- Actifs -->
+            <li class="has-submenu {{ request()->is('actif*') || request()->routeIs(['donnees.index','donnees.create','donnees.edit','logiciel.create', 'logiciel.edit', 'logiciel.index', 'materiel.index', 'materiel.create', 'materiel.edit', 'categorie.index','categorie.create','categorie.edit']) ? 'active' : '' }}">
+                <a href="#" class="{{ request()->is('actif*') || request()->routeIs(['donnees.index','donnees.create','donnees.edit','logiciel.create', 'logiciel.edit', 'logiciel.index', 'materiel.index', 'materiel.create', 'materiel.edit', 'categorie.index','categorie.create','categorie.edit']) ? 'active' : '' }}">
+                    <i class="bi bi-display"></i>Actifs
+                </a>
                 <ul class="submenu">
-                    <li><a href="/donnees" class="{{ request()->routeIs('donnees.actif-data') ? 'active' : '' }}"><i class="bi bi-database"></i>Actifs de données</a></li>
-                    <li><a href="{{ route('logiciel.index') }}" class="{{ request()->routeIs('logiciel.index') ? 'active' : '' }}"><i class="bi bi-terminal"></i>Actif logiciel</a></li>
-                    <li><a href="{{ route('actif-materiel') }}" class="{{ request()->routeIs('actif-materiel') ? 'active' : '' }}"><i class="bi bi-cpu"></i>Actif matériel</a></li>
-                    <li><a href="{{ route('categorie.index') }}" class="{{ request()->routeIs('categorie.index') ? 'active' : '' }}"><i class="bi bi-card-checklist"></i>Catégorie matériel</a></li>
+                    <li>
+                        <a href="{{ route('donnees.index') }}" class="{{ request()->routeIs('donnees.index') || request()->routeIs('donnees.create') || request()->routeIs('donnees.edit') ? 'active' : '' }}">
+                            <i class="bi bi-database"></i>Actifs de données
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('logiciel.index') }}" class="{{ request()->routeIs('logiciel.index') || request()->routeIs('logiciel.create') || request()->routeIs('logiciel.edit') ? 'active' : '' }}">
+                            <i class="bi bi-terminal"></i>Actif logiciel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('materiel.index') }}" class="{{ request()->routeIs('materiel.index') || request()->routeIs('materiel.create') || request()->routeIs('materiel.edit') ? 'active' : '' }}">
+                            <i class="bi bi-cpu"></i>Actif matériel
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('categorie.index') }}" class="{{ request()->routeIs('categorie.index') || request()->routeIs('categorie.create') || request()->routeIs('categorie.edit') ? 'active' : '' }}">
+                            <i class="bi bi-card-checklist"></i>Catégorie matériel
+                        </a>
+                    </li>
                 </ul>
             </li>
-            <li class="has-submenu {{ request()->is('utilisateur*') ? 'active' : '' }}">
-                <a href="#" class="{{ request()->is('utilisateur*') ? 'active' : '' }}"><i class="bi bi-person"></i>Utilisateur</a>
+
+            <!-- Utilisateur -->
+            <li class="has-submenu {{ request()->is('utilisateur*') || request()->routeIs(['User_Employe.index', 'User_Employe.create', 'User_Employe.edit', 'User_Service.index','User_Service.create', 'User_Service.edit']) ? 'active' : '' }}">
+                <a href="#" class="{{ request()->is('utilisateur*') || request()->routeIs(['User_Employe.index', 'User_Employe.create', 'User_Employe.edit', 'User_Service.index','User_Service.create', 'User_Service.edit']) ? 'active' : '' }}">
+                    <i class="bi bi-person"></i>Utilisateur
+                </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('User_Employe.index') }}" class="{{ request()->routeIs('User_Employe.index') ? 'active' : '' }}"><i class="bi bi-person-badge"></i>Employé</a></li>
-                    <li><a href="{{ route('User_Service.index') }}" class="{{ request()->routeIs('User_Service.index') ? 'active' : '' }}"><i class="bi bi-gear"></i>Service</a></li>
+                    <li>
+                        <a href="{{ route('User_Employe.index') }}" class="{{ request()->routeIs('User_Employe.index') || request()->routeIs('User_Employe.create') || request()->routeIs('User_Employe.edit') ? 'active' : '' }}">
+                            <i class="bi bi-person-badge"></i>Employé
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('User_Service.index') }}" class="{{ request()->routeIs('User_Service.index') || request()->routeIs('User_Service.create') || request()->routeIs('User_Service.edit') ? 'active' : '' }}">
+                            <i class="bi bi-gear"></i>Service
+                        </a>
+                    </li>
                 </ul>
             </li>
-            <li><a href="{{ route('fournisseurs.index') }}" class="{{ request()->routeIs('fournisseurs.index') ? 'active' : '' }}"><i class="bi bi-truck"></i>Fournisseur</a></li>
-            <li><a href="{{ route('attributions.index') }}" class="{{ request()->routeIs('attributions.index') ? 'active' : '' }}"><i class="bi bi-award"></i>Attribution</a></li>
-            <li><a href="{{ route('maintenance.index') }}" class="{{ request()->routeIs('maintenance.index') ? 'active' : '' }}"><i class="bi bi-tools"></i>Maintenance</a></li>
-            <li><a href="{{ route('historiques.index') }}" class="{{ request()->is('historiques') ? 'active' : '' }}"><i class="bi bi-clock-history"></i>Historique</a></li>
-            <li class="has-submenu {{ request()->is('compte*') ? 'active' : '' }}">
-                <a href="#" class="{{ request()->is('compte*') ? 'active' : '' }}"><i class="bi bi-person-circle"></i>Compte</a>
+
+            <!-- Fournisseur -->
+            <li>
+                <a href="{{ route('fournisseurs.index') }}" class="{{ request()->routeIs('fournisseurs.index') ? 'active' : '' }}">
+                    <i class="bi bi-truck"></i>Fournisseur
+                </a>
+            </li>
+
+            <!-- Attribution -->
+            <li>
+                <a href="{{ route('attributions.index') }}" class="{{ request()->routeIs('attributions.index') ? 'active' : '' }}">
+                    <i class="bi bi-award"></i>Attribution
+                </a>
+            </li>
+
+            <!-- Maintenance -->
+            <li>
+                <a href="{{ route('maintenance.index') }}" class="{{ request()->routeIs('maintenance.index') ? 'active' : '' }}">
+                    <i class="bi bi-tools"></i>Maintenance
+                </a>
+            </li>
+
+            <!-- Historique -->
+            <li>
+                <a href="{{ route('historiques.index') }}" class="{{ request()->is('historiques') ? 'active' : '' }}">
+                    <i class="bi bi-clock-history"></i>Historique
+                </a>
+            </li>
+
+            <!-- Compte -->
+            <li class="has-submenu {{ request()->is('compte*') || request()->is(['nouveau-compte', 'profil', 'deconnexion']) ? 'active' : '' }}">
+                <a href="#" class="{{ request()->is('compte*') || request()->is(['nouveau-compte', 'profil', 'deconnexion']) ? 'active' : '' }}">
+                    <i class="bi bi-person-circle"></i>Compte
+                </a>
                 <ul class="submenu">
-                    <li><a href="#" class="{{ request()->is('nouveau-compte') ? 'active' : '' }}"><i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
-                    <li><a href="#" class="{{ request()->is('profil') ? 'active' : '' }}"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
-                    <li><a href="#" class="{{ request()->is('deconnexion') ? 'active' : '' }}"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
+                    <li>
+                        <a href="#" class="{{ request()->is('nouveau-compte') ? 'active' : '' }}">
+                            <i class="bi bi-person-plus"></i>Nouveau Compte
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="{{ request()->is('profil') ? 'active' : '' }}">
+                            <i class="bi bi-person-lines-fill"></i>Mon Profil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="{{ request()->is('deconnexion') ? 'active' : '' }}">
+                            <i class="bi bi-box-arrow-right"></i>Déconnexion
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>
-
     </div>
+
 
     <!-- Right Panel -->
     <div class="rigth-panel">
@@ -87,8 +166,16 @@
                     <div class="sh-avatar">
                         <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="avatar">
                         <i class="bi bi-circle-fill"></i>
-                        <i class="bi bi-caret-down-fill"></i>
+                        <div class="dropdown">
+                            <i class="bi bi-caret-down-fill"></i>
+                            <ul class="dropdown-menu">
+                                <li><a href="#profile"> <i class="bi bi-person-plus"></i>Nouveau Compte</a></li>
+                                <li><a href="#settings"><i class="bi bi-person-lines-fill"></i>Mon Profil</a></li>
+                                <li><a href="#logout"><i class="bi bi-box-arrow-right"></i>Déconnexion</a></li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </nav>

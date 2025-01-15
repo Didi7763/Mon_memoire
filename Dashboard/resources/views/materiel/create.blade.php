@@ -45,7 +45,7 @@
 @section('main-content')
 <div class="header-container">
     <h2>Formulaire d'Actif Matériel</h2>
-    <a href="{{ route('actif-materiel') }}" class="btn btn-secondary">Retour à la liste des matériels</a>
+    <a href="{{ route('materiel.index') }}" class="btn btn-secondary">Retour à la liste des matériels</a>
 </div>
 
 <div class="form-container">
