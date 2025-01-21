@@ -67,59 +67,99 @@ Liste des services
 @endsection
 
 @section('main-content')
-<div class="header-container">
-    <h2>Liste des utilisateurs (services)</h2>
-    <a href="{{ route('User_Service.create') }}" class="btn btn-primary btn-add">
-        <i class="bi bi-plus-circle"></i>
-        Ajouter un nouveau service
-    </a>
-</div>
-
-<div class="table-container">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Code</th>
-                <th>Nom du service</th>
-                <th>Description</th>
-                <th>Responsable</th>
-                <th>Contact</th>
-                <th>Email</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($services as $service)
-            <tr>
-                <td>{{ $service->utilisateur->CodeUser }}</td>
-                <td>{{ $service->utilisateur->NomCompUser }}</td>
-                <td>{{ $service->DesServ }}</td>
-                <td>{{ $service->NpnomRespServ }}</td>
-                <td>{{ $service->utilisateur->ContactUser }}</td>
-                <td>{{ $service->utilisateur->EmailUser }}</td>
-                <td>
-                    <!-- Modification de l'action avec un lien vers l'édition -->
-                    <a href="{{ route('User_Service.edit', $service->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <!-- Formulaire pour la suppression -->
-                    <form action="{{ route('User_Service.destroy', $service->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="8" class="text-center">Aucun utilisateur trouvé</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    @if($services->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $services->links() }}
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    @endif
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Liste des utilisateurs (services)</h2>
+            <a href="{{ route('User_Service.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                <i class="bi bi-plus-circle"></i>
+                Ajouter un nouveau service
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left p-3">Code</th>
+                        <th class="text-left p-3">Nom du service</th>
+                        <th class="text-left p-3">Description</th>
+                        <th class="text-left p-3">Responsable</th>
+                        <th class="text-left p-3">Contact</th>
+                        <th class="text-left p-3">Email</th>
+                        <th class="text-left p-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($services as $service)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">{{ $service->utilisateur->CodeUser }}</td>
+                        <td class="p-3">{{ $service->utilisateur->NomCompUser }}</td>
+                        <td class="p-3">{{ $service->DesServ }}</td>
+                        <td class="p-3">{{ $service->NpnomRespServ }}</td>
+                        <td class="p-3">{{ $service->utilisateur->ContactUser }}</td>
+                        <td class="p-3">{{ $service->utilisateur->EmailUser }}</td>
+                        <td class="p-3">
+                            <div class="flex gap-2">
+                                <!-- Bouton "Modifier" plus petit -->
+                                <a href="{{ route('User_Service.edit', $service->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
+                                <!-- Bouton "Supprimer" plus petit -->
+                                <form action="{{ route('User_Service.destroy', $service->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="p-3 text-center">Aucun utilisateur trouvé</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            @if($services->hasPages())
+            <div class="flex justify-center mt-4">
+                {{ $services->links() }}
+            </div>
+            @endif
+        </div>
+    </div>
 </div>
+
+<!-- Script pour gérer le chargeur -->
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
+
 @endsection

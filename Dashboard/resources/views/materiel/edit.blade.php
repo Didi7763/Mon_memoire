@@ -4,9 +4,7 @@
 
 @section('custom-css-add')
 <style>
-
-
-.header-container {
+    .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,7 +23,6 @@
         gap: 0.5dvw;
     }
 
-    /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
         padding: 1rem;
@@ -34,126 +31,193 @@
         max-height: 70dvh;
         overflow: auto;
     }
-    .btn-primary{
+
+    .btn-primary {
         margin: 1vh 0;
     }
+
     input[readonly] {
-    cursor: not-allowed;
-    background-color: #f0f0f0; /* Optionnel : Changer l'apparence pour montrer que c'est non modifiable */
+        cursor: not-allowed;
+        background-color: #f0f0f0;
     }
 </style>
 @endsection
 
 @section('main-content')
 
-<div class="header-container">
-    <h2>Modifier un Actif de Données</h2>
-    <a href="{{ route('materiel.index') }}" class="btn btn-secondary">Retour à la liste des matériels</a>
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Modifier un Actif matériel</h2>
+            <a href="{{ route('materiel.index') }}" class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                Retour à la liste des matériels
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full max-h-[70vh] overflow-auto">
+            <form action="{{ route('materiel.update', $materiel->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Champ 1 : ID Actif -->
+                    <div class="mb-4">
+                        <label for="IdAct" class="block text-sm font-medium text-gray-700">ID Actif</label>
+                        <input type="text" id="IdAct" name="IdAct" value="{{ $materiel->actif->IdAct }}" required readonly
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-100">
+                    </div>
+
+                    <!-- Champ 2 : Nom du matériel -->
+                    <div class="mb-4">
+                        <label for="NomAct" class="block text-sm font-medium text-gray-700">Nom du matériel</label>
+                        <input type="text" id="NomAct" name="NomAct" value="{{ $materiel->actif->NomAct }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 3 : Marque -->
+                    <div class="mb-4">
+                        <label for="MarqMat" class="block text-sm font-medium text-gray-700">Marque</label>
+                        <input type="text" id="MarqMat" name="MarqMat" value="{{ $materiel->MarqMat }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 4 : Modèle -->
+                    <div class="mb-4">
+                        <label for="ModMarq" class="block text-sm font-medium text-gray-700">Modèle</label>
+                        <input type="text" id="ModMarq" name="ModMarq" value="{{ $materiel->ModMarq }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 5 : Numéro de Série -->
+                    <div class="mb-4">
+                        <label for="NumSerieMat" class="block text-sm font-medium text-gray-700">Numéro de Série</label>
+                        <input type="text" id="NumSerieMat" name="NumSerieMat" value="{{ $materiel->NumSerieMat }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 6 : Quantité -->
+                    <div class="mb-4">
+                        <label for="QteMat" class="block text-sm font-medium text-gray-700">Quantité</label>
+                        <input type="number" id="QteMat" name="QteMat" value="{{ $materiel->QteMat }}" required readonly
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-gray-100">
+                    </div>
+
+                    <!-- Champ 7 : Statut -->
+                    <div class="mb-4">
+                        <label for="StatMat" class="block text-sm font-medium text-gray-700">Statut</label>
+                        <select id="StatMat" name="StatMat" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled {{ empty($materiel->StatMat) ? 'selected' : '' }}>Sélection du statut</option>
+                            <option value="En stock" {{ $materiel->StatMat === 'En stock' ? 'selected' : '' }}>En stock</option>
+                            <option value="Affecté" {{ $materiel->StatMat === 'Affecté' ? 'selected' : '' }}>Affecté</option>
+                            <option value="Panne" {{ $materiel->StatMat === 'Panne' ? 'selected' : '' }}>Panne</option>
+                            <option value="Réparation" {{ $materiel->StatMat === 'Réparation' ? 'selected' : '' }}>Réparation</option>
+                            <option value="Réformé" {{ $materiel->StatMat === 'Réformé' ? 'selected' : '' }}>Réformé</option>
+                        </select>
+                    </div>
+
+                    <!-- Champ 8 : Date de réception -->
+                    <div class="mb-4">
+                        <label for="DatAcqMat" class="block text-sm font-medium text-gray-700">Date de réception</label>
+                        <input type="date" id="DatAcqMat" name="DatAcqMat" value="{{ $materiel->DatAcqMat }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 9 : Durée de vie -->
+                    <div class="mb-4">
+                        <label for="DureVieMat" class="block text-sm font-medium text-gray-700">Durée de vie (en année)</label>
+                        <input type="number" id="DureVieMat" name="DureVieMat" value="{{ $materiel->DureVieMat }}" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 10 : Fournisseur -->
+                    <div class="mb-4">
+                        <label for="IdFour" class="block text-sm font-medium text-gray-700">Fournisseur</label>
+                        <select id="IdFour" name="IdFour" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled>-- Sélectionnez le fournisseur --</option>
+                            @foreach ($fournisseurs as $fournisseur)
+                                <option value="{{ $fournisseur->IdFour }}" {{ $materiel->IdFour == $fournisseur->IdFour ? 'selected' : '' }}>
+                                    {{ $fournisseur->NomFour }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Champ 11 : Catégorie -->
+                    <div class="mb-4">
+                        <label for="RefCatMat" class="block text-sm font-medium text-gray-700">Catégorie</label>
+                        <select id="RefCatMat" name="RefCatMat" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled>-- Sélectionnez la catégorie --</option>
+                            @foreach ($categorie_materiels as $categorie)
+                                <option value="{{ $categorie->RefCatMat }}" {{ $materiel->RefCatMat == $categorie->RefCatMat ? 'selected' : '' }}>
+                                    {{ $categorie->NomCatMat }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Champ 12 : Commentaire (sur une seule ligne) -->
+                    <div class="mb-4">
+                        <label for="ComtAct" class="block text-sm font-medium text-gray-700">Commentaire</label>
+                        <input type="text" id="ComtAct" name="ComtAct" value="{{ $materiel->actif->ComtAct }}"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="mt-6">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Enregistrer
+                    </button>
+                </div>
+
+                <!-- Gestion des erreurs -->
+                @if ($errors->any())
+                    <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="form-container">
-    <form action="{{ route('materiel.update', $materiel->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+<!-- Script pour gérer le chargeur -->
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
 
-        <div class="mb-3">
-            <label for="IdAct" class="form-label">ID Actif</label>
-            <input type="text" class="form-control" id="IdAct" name="IdAct" value="{{ $materiel->actif->IdAct }}" required readonly>
-        </div>
-        <div class="form-group">
-            <label for="NomAct">Nom du matériel</label>
-            <input type="text" name="NomAct" id="NomAct" class="form-control" value="{{ $materiel->actif->NomAct }}" required>
-        </div>
-        <div class="form-group">
-            <label for="MarqMat">Marque</label>
-            <input type="text" name="MarqMat" id="MarqMat" class="form-control" value="{{ $materiel->MarqMat }}" required>
-        </div>
-        <div class="form-group">
-            <label for="ModMarq">Modèle</label>
-            <input type="text" name="ModMarq" id="ModMarq" class="form-control" value="{{ $materiel->ModMarq }}" required>
-        </div>
-        <div class="form-group">
-            <label for="NumSerieMat">Numéro de Série</label>
-            <input type="text" name="NumSerieMat" id="NumSerieMat" class="form-control" value="{{ $materiel->NumSerieMat }}" required>
-        </div>
-        <div class="form-group">
-            <label for="QteMat">Quantité</label>
-            <input type="number" name="QteMat" id="QteMat" class="form-control" value="{{ $materiel->QteMat }}" required readonly>
-        </div>
-        <div class="form-group">
-            <label for="StatMat">Statut</label>
-            <select name="StatMat" id="StatMat" class="form-control">
-                <option value="" disabled {{ empty($materiel->StatMat) ? 'selected' : '' }}>Selection du statut</option>
-                <option value="En stock" {{ $materiel->StatMat ?? '' === 'En stock' ? 'selected' : '' }}>
-                    En stock
-                </option>
-                <option value="Affecté" {{ $materiel->StatMat ?? '' === 'Affecté' ? 'selected' : '' }}>
-                   Affecté
-                </option>
-                <option value="Panne" {{ $materiel->StatMat ?? '' === 'Panne' ? 'selected' : '' }}>
-                    Panne
-                </option>
-                <option value="Réparation" {{ $materiel->StatMat ?? '' === 'Réparation' ? 'selected' : '' }}>
-                    Réparation
-                </option>
-                <option value="Réformé" {{ $materiel->StatMat ?? '' === 'Réformé' ? 'selected' : '' }}>
-                    Réformé
-                </option>
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
 
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="DatAcqMat">Date de reception</label>
-            <input type="date" name="DatAcqMat" id="DatAcqMat" class="form-control" value="{{ $materiel->DatAcqMat }}" required>
-        </div>
-        <div class="form-group">
-            <label for="DureVieMat">Durée de vie (en année) </label>
-            <input type="number" name="DureVieMat" id="DureVieMat" class="form-control" value="{{ $materiel->DureVieMat }}" required>
-        </div>
-        <div class="form-group">
-            <label for="IdFour" class="form-label">Fournisseur</label>
-            <select class="form-select" id="IdFour" name="IdFour" required>
-                <option value="" disabled>-- Sélectionnez le fournisseur --</option>
-                @foreach ($fournisseurs as $fournisseur)
-                <!-- Comparaison de l'ID de l'actif sélectionné avec celui de la maintenance -->
-                <option value="{{ $fournisseur->IdFour }}"
-                    {{ $materiel->IdFour == $fournisseur->IdFour ? 'selected' : '' }}>
-                    {{ $fournisseur->NomFour }}
-                 </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="RefCatMat" class="form-label">Catégorie</label>
-            <select class="form-select" id="RefCatMat" name="RefCatMat" required>
-                <option value="" disabled>-- Sélectionnez la catégorie --</option>
-                @foreach ($categorie_materiels as $categorie)
-                <!-- Comparaison de l'ID de l'actif sélectionné avec celui de la maintenance -->
-                <option value="{{ $categorie->RefCatMat }}"
-                    {{ $materiel->RefCatMat == $categorie->RefCatMat ? 'selected' : '' }}>
-                    {{ $categorie->NomCatMat }}
-                 </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ComtAct">Commentaire</label>
-            <textarea name="ComtAct" id="ComtAct" class="form-control" value="" >{{ $materiel->actif->ComtAct}}</textarea>
-        </div>
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
 
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    </form>
-</div>
-
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
 
 @endsection

@@ -5,8 +5,7 @@
 
 @section('custom-css-add')
 <style>
-
-.header-container {
+    .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,7 +24,6 @@
         gap: 0.5dvw;
     }
 
-    /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
         padding: 2rem;
@@ -36,48 +34,116 @@
 @endsection
 
 @section('main-content')
-<div class="header-container">
-    <h2>Formulaire d'utilisateur-service</h2>
-    <a href="{{ route('User_Service.index') }}" class="btn btn-secondary">Retour à la liste des services</a>
+
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Formulaire d'utilisateur-service</h2>
+            <a href="{{ route('User_Service.index') }}" class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                Retour à la liste des services
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full">
+            <form action="{{ route('User_Service.store') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Champ 1 : Code -->
+                    <div class="mb-4">
+                        <label for="CodeUser" class="block text-sm font-medium text-gray-700">Code</label>
+                        <input type="text" id="CodeUser" name="CodeUser" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 2 : Nom du service -->
+                    <div class="mb-4">
+                        <label for="NomCompUser" class="block text-sm font-medium text-gray-700">Nom du service</label>
+                        <input type="text" id="NomCompUser" name="NomCompUser" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 3 : Description -->
+                    <div class="mb-4">
+                        <label for="DesServ" class="block text-sm font-medium text-gray-700">Description</label>
+                        <input type="text" id="DesServ" name="DesServ" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 4 : Responsable -->
+                    <div class="mb-4">
+                        <label for="NpnomRespServ" class="block text-sm font-medium text-gray-700">Responsable</label>
+                        <input type="text" id="NpnomRespServ" name="NpnomRespServ" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 5 : Contact -->
+                    <div class="mb-4">
+                        <label for="ContactUser" class="block text-sm font-medium text-gray-700">Contact</label>
+                        <input type="tel" id="ContactUser" name="ContactUser" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 6 : Email -->
+                    <div class="mb-4">
+                        <label for="EmailUser" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="EmailUser" name="EmailUser" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="mt-6">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Ajouter
+                    </button>
+                </div>
+
+                <!-- Gestion des erreurs -->
+                @if ($errors->any())
+                    <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="form-container">
-    <form action="{{ route('User_Service.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="CodeUser">Code</label>
-            <input type="text" name="CodeUser" id="CodeUser" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="NomCompUser">Nom du service</label>
-            <input type="text" name="NomCompUser" id="NomCompUser" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="DesServ">Description</label>
-            <input type="text" name="DesServ" id="DesServ" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="NpnomRespServ">Responsable</label>
-            <input type="text" name="NpnomRespServ" id="NpnomRespServ" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="ContactUser">Contact</label>
-            <input type="tel" name="ContactUser" id="ContactUser" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="EmailUser">Email</label>
-            <input type="email" name="EmailUser" id="EmailUser" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success mt-3">Ajouter</button>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    </form>
-</div>
+<!-- Script pour gérer le chargeur -->
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
+
 @endsection

@@ -5,8 +5,7 @@
 
 @section('custom-css-add')
 <style>
-
-.header-container {
+    .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,7 +24,6 @@
         gap: 0.5dvw;
     }
 
-    /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
         padding: 2rem;
@@ -36,68 +34,142 @@
 @endsection
 
 @section('main-content')
-<div class="header-container">
-    <h2>Formulaire de maintenance</h2>
-    <a href="{{ route('maintenance.index') }}" class="btn btn-secondary">Retour à la liste des maintenances</a>
+
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Formulaire de maintenance</h2>
+            <a href="{{ route('maintenance.index') }}" class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                Retour à la liste des maintenances
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full">
+            <form action="{{ route('maintenance.store') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Champ 1 : Description -->
+                    <div class="mb-4">
+                        <label for="DesMaint" class="block text-sm font-medium text-gray-700">Description</label>
+                        <input type="text" id="DesMaint" name="DesMaint" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 2 : Type de maintenance -->
+                    <div class="mb-4">
+                        <label for="TypMaint" class="block text-sm font-medium text-gray-700">Type de maintenance</label>
+                        <select id="TypMaint" name="TypMaint" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Sélectionnez le type</option>
+                            <option value="corrective">Maintenance corrective</option>
+                            <option value="préventive">Maintenance préventive</option>
+                            <option value="prédictive">Maintenance prédictive</option>
+                            <option value="curative">Maintenance curative</option>
+                            <option value="evolutive">Maintenance évolutive</option>
+                        </select>
+                    </div>
+
+                    <!-- Champ 3 : Date de maintenance -->
+                    <div class="mb-4">
+                        <label for="DatMaint" class="block text-sm font-medium text-gray-700">Date de maintenance</label>
+                        <input type="date" id="DatMaint" name="DatMaint" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 4 : Nom du technicien -->
+                    <div class="mb-4">
+                        <label for="NomTechMaint" class="block text-sm font-medium text-gray-700">Nom du technicien</label>
+                        <input type="text" id="NomTechMaint" name="NomTechMaint" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 5 : Coût de maintenance -->
+                    <div class="mb-4">
+                        <label for="CoutMaint" class="block text-sm font-medium text-gray-700">Coût de maintenance</label>
+                        <input type="number" id="CoutMaint" name="CoutMaint" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 6 : Date de prochaine maintenance -->
+                    <div class="mb-4">
+                        <label for="DatProchMaint" class="block text-sm font-medium text-gray-700">Date de prochaine maintenance</label>
+                        <input type="date" id="DatProchMaint" name="DatProchMaint"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 7 : Actif -->
+                    <div class="mb-4">
+                        <label for="IdAct" class="block text-sm font-medium text-gray-700">Actif</label>
+                        <select id="IdAct" name="IdAct" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>-- Sélectionnez un actif --</option>
+                            @foreach ($actifs as $actif)
+                                <option value="{{ $actif->IdAct }}">{{ $actif->NomAct }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Champ 8 : Commentaire (sur une seule ligne) -->
+                    <div class="mb-4">
+                        <label for="ComtMaint" class="block text-sm font-medium text-gray-700">Commentaire</label>
+                        <input type="text" id="ComtMaint" name="ComtMaint"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="mt-6">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Ajouter
+                    </button>
+                </div>
+
+                <!-- Gestion des erreurs -->
+                @if ($errors->any())
+                    <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="form-container">
-    <form action="{{ route('maintenance.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="DesMaint">Description</label>
-            <input type="text" class="form-control" name="DesMaint" id="DesMaint"  required>
-        </div>
-        <div class="form-group">
-            <label for="TypMaint">Type de maintenance</label>
-            <select class="form-select" id="TypMaint" required="required" name="TypMaint">
-                <option selected>Selectionne le type</option>
-                <option value="corrective">Maintenance corrective</option>
-                <option value="préventive">Maintenance préventive</option>
-                <option value="prédictive">Maintenance préventive</option>
-                <option value="curative">Maintenance prédictive</option>
-                <option value="evolutive">Maintenance evolutive</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="DatMaint">Date de maintenance</label>
-            <input type="date" class="form-control" name="DatMaint" id="DatMaint"  required>
-        </div>
-        <div class="form-group">
-            <label for="NomTechMaint">Nom du technicien</label>
-            <input type="text" class="form-control" name="NomTechMaint" id="NomTechMaint"  required>
-        </div>
-        <div class="form-group">
-            <label for="CoutMaint">Coût de maintenance</label>
-            <input type="number" class="form-control" name="CoutMaint" id="CoutMaint"  required>
-        </div>
-        <div class="form-group">
-            <label for="DatProchMaint">Date de prochaine maintenance</label>
-            <input type="date" class="form-control" name="DatProchMaint" id="DatProchMaint">
-        </div>
-        <div class="form-group">
-            <label for="IdAct">Actif</label>
-            <select class="form-select" id="IdAct" name="IdAct" required>
-                <option value="" disabled selected>-- Sélectionnez un actif --</option>
-                @foreach ($actifs as $actif)
-                    <option value="{{ $actif->IdAct }}">{{ $actif->NomAct }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ComtMaint">Commentaire</label>
-            <textarea name="ComtMaint" id="ComtMaint" class="form-control" ></textarea>
-        </div>
-        <button type="submit" class="btn btn-success mt-3">Ajouter</button>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    </form>
-</div>
+<!-- Script pour gérer le chargeur -->
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
+
 @endsection

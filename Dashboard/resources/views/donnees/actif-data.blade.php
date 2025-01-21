@@ -48,8 +48,6 @@
         transform: translateY(-2px);
     }
 
-
-
     .status-badge {
         padding: 0.2rem 0.5rem;
         border-radius: 20px;
@@ -63,85 +61,118 @@
     .status-supprime { background: #fce4ec; color: #c2185b; }
     .status-active { background: #fff3e0; color: #f57c00; }
     .status-obsolete { background: #efebe9; color: #5d4037; }
-
 </style>
 @endsection
 
 @section('main-content')
-
-<div class="header-container">
-    <h2>Liste des Actifs de Données</h2>
-    <a href="{{ route('donnees.create') }}" class="btn btn-primary btn-add">
-        <i class="bi bi-plus-circle"></i>
-        Ajouter une donnée
-    </a>
-</div>
-
-<div class="table-container">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Identifiant</th>
-                <th>Nom</th>
-                <th>Format</th>
-                <th>Source</th>
-                <th>Responsable</th>
-                <th>Statut</th>
-                <th>Date de réception</th>
-                <th>Dernière mise à jour</th>
-                <th>Commentaire</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @forelse($donnees as $donnee)
-            <tr>
-                <td>{{ $donnee->actif->IdAct }}</td>
-                <td>{{ $donnee->actif->NomAct }}</td>
-                <td>{{ $donnee->FormatData }}</td>
-                <td>{{ $donnee->SourceData }}</td>
-                <td>{{ $donnee->ResponsabeData }}</td> <!-- Correction de ResponsabeData en ResponsableData -->
-                <td>
-                    <span class="status-badge
-                        @switch($donnee->StatData)
-                            @case('en création') status-creation @break
-                            @case('active') status-active @break
-                            @case('stockée') status-stock @break
-                            @case('obsolète') status-obsolete @break
-                            @case('supprimée') status-supprime @break
-                        @endswitch">
-                        {{ $donnee->StatData }}
-                    </span>
-                </td>
-                <!-- Correction de StatData en StatutData -->
-                <td>{{ \Carbon\Carbon::parse($donnee->DatRecpData)->format('d/m/Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($donnee->DatMajData)->format('d/m/Y') }}</td>
-                <td>{{ $donnee->actif->ComtAct }}</td>
-                <td>
-                    <!-- Modification de l'action avec un lien vers l'édition -->
-                    <a href="{{ route('donnees.edit', $donnee->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <!-- Formulaire pour la suppression -->
-                    <form action="{{ route('donnees.destroy', $donnee->id) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="10" class="text-center">Aucune donnée trouvée</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    @if($donnees->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $donnees->links() }}
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    @endif
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Liste des Actifs de Données</h2>
+            <a href="{{ route('donnees.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                <i class="bi bi-plus-circle"></i>
+                Ajouter une donnée
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left p-3">Identifiant</th>
+                        <th class="text-left p-3">Nom</th>
+                        <th class="text-left p-3">Format</th>
+                        <th class="text-left p-3">Source</th>
+                        <th class="text-left p-3">Responsable</th>
+                        <th class="text-left p-3">Statut</th>
+                        <th class="text-left p-3">Date de réception</th>
+                        <th class="text-left p-3">Dernière mise à jour</th>
+                        <th class="text-left p-3">Commentaire</th>
+                        <th class="text-left p-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($donnees as $donnee)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">{{ $donnee->actif->IdAct }}</td>
+                        <td class="p-3">{{ $donnee->actif->NomAct }}</td>
+                        <td class="p-3">{{ $donnee->FormatData }}</td>
+                        <td class="p-3">{{ $donnee->SourceData }}</td>
+                        <td class="p-3">{{ $donnee->ResponsabeData }}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium
+                                @switch($donnee->StatData)
+                                    @case('en création') bg-blue-100 text-blue-800 @break
+                                    @case('active') bg-orange-100 text-orange-800 @break
+                                    @case('stockée') bg-green-100 text-green-800 @break
+                                    @case('obsolète') bg-gray-100 text-gray-800 @break
+                                    @case('supprimée') bg-pink-100 text-pink-800 @break
+                                @endswitch">
+                                {{ $donnee->StatData }}
+                            </span>
+                        </td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($donnee->DatRecpData)->format('d/m/Y') }}</td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($donnee->DatMajData)->format('d/m/Y') }}</td>
+                        <td class="p-3">{{ $donnee->actif->ComtAct }}</td>
+                        <td class="p-3">
+                            <div class="flex gap-2">
+                                <a href="{{ route('donnees.edit', $donnee->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
+                                <form action="{{ route('donnees.destroy', $donnee->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="10" class="p-3 text-center">Aucune donnée trouvée</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            @if($donnees->hasPages())
+            <div class="flex justify-center mt-4">
+                {{ $donnees->links() }}
+            </div>
+            @endif
+        </div>
+    </div>
 </div>
 
+<!-- Script pour gérer le chargeur -->
+<script>
+    // Gestion du chargeur
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
 @endsection

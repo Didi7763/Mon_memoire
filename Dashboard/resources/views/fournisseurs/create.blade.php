@@ -5,8 +5,7 @@
 
 @section('custom-css-add')
 <style>
-
-.header-container {
+    .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -25,7 +24,6 @@
         gap: 0.5dvw;
     }
 
-    /* Personnalisation CSS pour le formulaire */
     .form-container {
         background: #fff;
         padding: 1rem;
@@ -34,68 +32,142 @@
         max-height: 70dvh;
         overflow: auto;
     }
-    .btn-primary{
+
+    .btn-primary {
         margin: 1vh 0;
     }
-
 </style>
 @endsection
 
 @section('main-content')
-<div class="header-container">
-    <h2>Formulaire de fournisseur</h2>
-    <a href="{{ route('fournisseurs.index') }}" class="btn btn-secondary">Retour à la liste des fournisseurs</a>
+
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
+            <h2 class="text-xl font-bold">Formulaire de fournisseur</h2>
+            <a href="{{ route('fournisseurs.index') }}" class="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                Retour à la liste des fournisseurs
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-full">
+            <form action="{{ route('fournisseurs.store') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Champ 1 : Identifiant -->
+                    <div class="mb-4">
+                        <label for="IdFour" class="block text-sm font-medium text-gray-700">Identifiant</label>
+                        <input type="text" id="IdFour" name="IdFour" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 2 : Nom du fournisseur -->
+                    <div class="mb-4">
+                        <label for="NomFour" class="block text-sm font-medium text-gray-700">Nom du fournisseur</label>
+                        <input type="text" id="NomFour" name="NomFour" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 3 : Contact -->
+                    <div class="mb-4">
+                        <label for="ContFour" class="block text-sm font-medium text-gray-700">Contact</label>
+                        <input type="text" id="ContFour" name="ContFour" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 4 : Email -->
+                    <div class="mb-4">
+                        <label for="EmailFour" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="EmailFour" name="EmailFour" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 5 : Adresse locale -->
+                    <div class="mb-4">
+                        <label for="AdressFour" class="block text-sm font-medium text-gray-700">Adresse locale</label>
+                        <input type="text" id="AdressFour" name="AdressFour" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 6 : Nom du personnel -->
+                    <div class="mb-4">
+                        <label for="NomPersCont" class="block text-sm font-medium text-gray-700">Nom du personnel</label>
+                        <input type="text" id="NomPersCont" name="NomPersCont" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- Champ 7 : Type de produit -->
+                    <div class="mb-4">
+                        <label for="TypProdFournit" class="block text-sm font-medium text-gray-700">Type de produit</label>
+                        <select id="TypProdFournit" name="TypProdFournit" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Type Produit</option>
+                            <option value="matériel">Matériel</option>
+                            <option value="logiciel">Logiciel</option>
+                        </select>
+                    </div>
+
+                    <!-- Champ 8 : Commentaire (sur une seule ligne) -->
+                    <div class="mb-4">
+                        <label for="NotesFour" class="block text-sm font-medium text-gray-700">Commentaire</label>
+                        <input type="text" id="NotesFour" name="NotesFour"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="mt-6">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        Ajouter
+                    </button>
+                </div>
+
+                <!-- Gestion des erreurs -->
+                @if ($errors->any())
+                    <div class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
 </div>
 
-<div class="form-container">
-    <form action="{{ route('fournisseurs.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="IdFour">Identifiant</label>
-            <input type="text" class="form-control" name="IdFour" id="IdFour"  required>
-        </div>
-        <div class="form-group">
-            <label for="NomFour">Nom du fournisseur</label>
-            <input type="text" class="form-control" name="NomFour" id="NomFour"  required>
-        </div>
-        <div class="form-group">
-            <label for="ContFour">Contact</label>
-            <input type="text" class="form-control" name="ContFour" id="ContFour"  required>
-        </div>
-        <div class="form-group">
-            <label for="EmailFour">Email</label>
-            <input type="email" class="form-control" name="EmailFour" id="EmailFour"  required>
-        </div>
-        <div class="form-group">
-            <label for="AdressFour">Adresse local</label>
-            <input type="text" class="form-control" name="AdressFour" id="AdressFour"  required>
-        </div>
-        <div class="form-group">
-            <label for="NomPersCont">Nom du personnel</label>
-            <input type="text" class="form-control" name="NomPersCont" id="NomPersCont"  required>
-        </div>
-        <div class="form-group">
-            <label for="TypProdFournit">Type de produit</label>
-            <select name="TypProdFournit" class="form-select" id="TypProdFournit" required>
-                <option value="" disabled selected>Type Produit</option>
-                <option value="matériel">Matériel</option>
-                <option value="logiciel">Logiciel</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="NotesFour">Commentaire</label>
-            <textarea name="NotesFour" id="NotesFour" class="form-control" ></textarea>
-        </div>
-        <button type="submit" class="btn btn-success mt-3">Ajouter</button>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    </form>
-</div>
+<!-- Script pour gérer le chargeur -->
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
+
 @endsection

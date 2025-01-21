@@ -87,82 +87,120 @@ Liste des Actifs Matériels
 @endsection
 
 @section('main-content')
-
-
-<div class="header-container">
-    <h2>Liste des Actifs Matériels</h2>
-    <a href="{{ route('materiel.create') }}" class="btn btn-primary btn-add">
-        <i class="bi bi-plus-circle"></i>
-        Ajouter un actif matériel
-    </a>
-</div>
-
-<div class="table-container">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Identifiant</th>
-                <th>Nom</th>
-                <th>Marque</th>
-                <th>Modèle</th>
-                <th>N° Série</th>
-                <th>Statut</th>
-                <th>Date de reception</th>
-                <th>Délai d'utilisation</th>
-                <th>Fournisseur</th>
-                <th>Catégorie</th>
-                <th>Commentaire</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($materiels as $materiel)
-            <tr>
-                <td>{{ $materiel->actif->IdAct }}</td>
-                <td>{{ $materiel->actif->NomAct }}</td>
-                <td>{{ $materiel->MarqMat }}</td>
-                <td>{{ $materiel->ModMarq }}</td>
-                <td>{{ $materiel->NumSerieMat }}</td>
-                <td>
-                    <span class="status-badge
-                        @switch($materiel->StatMat)
-                            @case('En stock') status-stock @break
-                            @case('Affecté') status-affecte @break
-                            @case('panne') status-panne @break
-                            @case('reparation') status-maintenance @break
-                            @case('Réformé') status-reforme @break
-                        @endswitch">
-                        {{ $materiel->StatMat }}
-                    </span>
-                </td>
-                <td>{{ \Carbon\Carbon::parse($materiel->DatAcqMat )->format('d/m/Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($materiel->DatAcqMat)->addYears($materiel->DureVieMat)->format('d/m/Y') }}</td>
-                <td>{{ $materiel->fournisseur->NomFour }}</td>
-                <td>{{ $materiel->categorie->NomCatMat }}</td>
-                <td>{{ $materiel->actif->ComtAct }}</td>
-                    <td class="action-buttons">
-                        <a href="{{route('materiel.edit', $materiel->id) }}" class="btn btn-warning btn-sm">Modifier</a>
-                        <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="9" class="text-center">Aucun actif matériel trouvé</td>
-                </tr>
-            @endforelse
-        </tbody>
-
-    </table>
-
-    @if($materiels->hasPages())
-    <div class="d-flex justify-content-center mt-4">
-        {{ $materiels->links() }}
+<div class="p-8 overflow-y-auto" style="max-height: calc(100vh - 64px);">
+    <!-- Chargeur centré par rapport à #main-content et décalé de 50px vers la droite -->
+    <div id="loader" class="flex justify-center items-center h-full w-full" style="position: absolute; top: 50%; left: 57%; transform: translate(calc(50px - 50%), -50%); z-index: 1000;">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-    @endif
+
+    <!-- Contenu principal (caché initialement) -->
+    <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
+        <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem] w-[78vw]">
+            <h2 class="text-xl font-bold">Liste des Actifs Matériels</h2>
+            <a href="{{ route('materiel.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                <i class="bi bi-plus-circle"></i>
+                Ajouter un actif matériel
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6 mt-6 mx-auto w-[78vw]">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left p-3">Identifiant</th>
+                        <th class="text-left p-3">Nom</th>
+                        <th class="text-left p-3">Marque</th>
+                        <th class="text-left p-3">Modèle</th>
+                        <th class="text-left p-3">N° Série</th>
+                        <th class="text-left p-3">Statut</th>
+                        <th class="text-left p-3">Date de réception</th>
+                        <th class="text-left p-3">Délai d'utilisation</th>
+                        <th class="text-left p-3">Fournisseur</th>
+                        <th class="text-left p-3">Catégorie</th>
+                        <th class="text-left p-3">Commentaire</th>
+                        <th class="text-left p-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($materiels as $materiel)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">{{ $materiel->actif->IdAct }}</td>
+                        <td class="p-3">{{ $materiel->actif->NomAct }}</td>
+                        <td class="p-3">{{ $materiel->MarqMat }}</td>
+                        <td class="p-3">{{ $materiel->ModMarq }}</td>
+                        <td class="p-3">{{ $materiel->NumSerieMat }}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium
+                                @switch($materiel->StatMat)
+                                    @case('En stock') bg-blue-100 text-blue-800 @break
+                                    @case('Affecté') bg-green-100 text-green-800 @break
+                                    @case('panne') bg-pink-100 text-pink-800 @break
+                                    @case('reparation') bg-orange-100 text-orange-800 @break
+                                    @case('Réformé') bg-gray-100 text-gray-800 @break
+                                @endswitch">
+                                {{ $materiel->StatMat }}
+                            </span>
+                        </td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($materiel->DatAcqMat)->format('d/m/Y') }}</td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($materiel->DatAcqMat)->addYears($materiel->DureVieMat)->format('d/m/Y') }}</td>
+                        <td class="p-3">{{ $materiel->fournisseur->NomFour }}</td>
+                        <td class="p-3">{{ $materiel->categorie->NomCatMat }}</td>
+                        <td class="p-3">{{ $materiel->actif->ComtAct }}</td>
+                        <td class="p-3">
+                            <div class="flex gap-2">
+                                <!-- Bouton "Modifier" plus petit -->
+                                <a href="{{ route('materiel.edit', $materiel->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
+                                <!-- Bouton "Supprimer" plus petit -->
+                                <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="12" class="p-3 text-center">Aucun actif matériel trouvé</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            @if($materiels->hasPages())
+            <div class="flex justify-center mt-4">
+                {{ $materiels->links() }}
+            </div>
+            @endif
+        </div>
+    </div>
 </div>
 
+<!-- Script pour gérer le chargeur -->
+<script>
+    // Gestion du chargeur
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('main-content');
+
+        // Faire disparaître le chargeur après 3 secondes
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 1s';
+
+            // Attendre que le chargeur disparaisse complètement
+            setTimeout(() => {
+                // Supprimer le chargeur du DOM
+                loader.remove();
+
+                // Faire apparaître le contenu principal progressivement
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transition = 'opacity 1s';
+                }, 10); // Petit délai pour s'assurer que le display: block est appliqué
+            }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
+        }, 3000); // Délai initial avant de commencer la transition
+    }, 0); // Démarrer immédiatement
+</script>
 @endsection
