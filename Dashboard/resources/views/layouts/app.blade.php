@@ -15,6 +15,8 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+
     @yield('custom-css-add')
 
     <style>
@@ -212,17 +214,20 @@
                         </a>
                     </li>
                     <li id="compte-profil">
-                        <a href="#" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.profil') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-person-lines-fill mr-2"></i>
-                            <span class="link-text">Mon Profil</span>
-                        </a>
-                    </li>
-                    <li id="compte-deconnexion">
-                        <a href="#" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.deconnexion') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-box-arrow-right mr-2"></i>
-                            <span class="link-text">Déconnexion</span>
-                        </a>
-                    </li>
+    <a href="{{ route('compte.profil') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.profil') ? 'bg-blue-100' : '' }}">
+        <i class="bi bi-person-lines-fill mr-2"></i>
+        <span class="link-text">Mon Profil</span>
+    </a>
+</li>
+                                <li id="compte-deconnexion">
+                                            <form action="{{ route('logout') }}" method="POST" class="w-full">
+                @csrf
+                <button type="submit" class="flex items-center  p-2 text-blue-900 hover:bg-blue-50 rounded-lg">
+                    <i class="bi bi-box-arrow-right mr-2"></i>
+                    <span class="link-text">Déconnexion</span>
+                </button>
+            </form>
+                        </li>
                 </ul>
             </li>
         </ul>
@@ -249,7 +254,7 @@
                     </form>
 
                     <!-- Dark Mode -->
-                    <i class="bi bi-brightness-high-fill text-3xl cursor-pointer"></i>
+                    <i class="bi bi-brightness-high-fill text-3xl cursor-pointer dark-mode-toggle"></i>
 
                     <!-- Notification -->
                     <div class="relative">
@@ -269,7 +274,15 @@
                         <ul x-show="open" @mouseenter="open = true" @mouseleave="open = false" class="absolute top-full mt-2 right-0 w-48 bg-white shadow-lg rounded-lg z-50" x-cloak>
                             <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Nouveau Compte</a></li>
                             <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Mon Profil</a></li>
-                            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Déconnexion</a></li>
+                            <li>
+                                <!-- Formulaire de déconnexion -->
+                                    <form action="{{ route('logout') }}" method="POST" class="block w-full">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                            Déconnexion
+                                        </button>
+                                    </form>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -315,5 +328,7 @@
             });
         });
     </script>
+        <script src="{{ asset('js/darkMode.js') }}"></script>
+
 </body>
 </html>

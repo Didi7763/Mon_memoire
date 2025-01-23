@@ -15,19 +15,29 @@ use App\Http\Controllers\AttributionController;
 use App\Http\Controllers\CategorieController;
 use App\Models\Employe;
 use App\Models\Maintenance;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActifController;
+
+
 
 Route::get('//', [DashboardController::class, 'index'])->name('mondash');
 // Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/compte/profil', [UserController::class, 'profil'])->name('compte.profil');
+});
 
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
 Route::get('/actif-logiciel', [LogicielController::class, 'index'])->name('actif-logiciel');
 
 
 Route::any('/mondash', [DashboardController::class, 'index'])->name('mondash');
-
-use App\Http\Controllers\ActifController;
 
 Route::get('donnees.actif-data', [ActifController::class, 'afficherActifs']);
 
@@ -42,15 +52,16 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/mondash', [DashboardController::class, 'index'])->name('mondash');
+    Route::get('/compte/profil', [UserController::class, 'profil'])->name('compte.profil');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/compte/profil', [UserController::class, 'profil'])->name('compte.profil');
+    Route::put('/compte/profil/update', [UserController::class, 'update'])->name('compte.profil.update');
+});
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->name('dashboard');

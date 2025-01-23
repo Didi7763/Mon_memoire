@@ -1,0 +1,58 @@
+/* styles.css */
+body.dark-mode {
+    background-color: #121212; /* Arrière-plan sombre */
+    color: #ffffff; /* Texte en blanc */
+}
+
+/* Cibler la sidebar en mode sombre */
+body.dark-mode #sidebar {
+    background-color: #1e1e1e; /* Arrière-plan sombre pour la sidebar */
+    color: #ffffff; /* Texte en blanc */
+}
+
+/* Cibler les liens dans la sidebar */
+body.dark-mode #sidebar a {
+    color: #bb86fc; /* Couleur des liens en mode sombre */
+}
+
+/* Cibler le panel-right en mode sombre */
+body.dark-mode #right-panel {
+    background-color: #121212; /* Arrière-plan sombre */
+    color: #ffffff; /* Texte en blanc */
+}
+
+/* Cibler la navbar en mode sombre */
+body.dark-mode nav {
+    background-color: #1e1e1e; /* Arrière-plan sombre pour la navbar */
+    color: #ffffff; /* Texte en blanc */
+}
+
+/* Cibler les boutons en mode sombre */
+body.dark-mode button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+/* Cibler les inputs en mode sombre */
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+/* Cibler les cartes ou conteneurs en mode sombre */
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    border: 1px solid #333333;
+}
+
+/* Cibler les en-têtes en mode sombre */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #ffffff;
+}
+
+
