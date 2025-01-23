@@ -13,6 +13,7 @@ use App\Http\Controllers\LogicielController;
 use App\Http\Controllers\AttribuerController;
 use App\Http\Controllers\AttributionController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Models\Employe;
 use App\Models\Maintenance;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +21,29 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActifController;
 
 
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::get('/mondash', [DashboardController::class, 'index'])->middleware('auth')->name('mondash');
 
-Route::get('//', [DashboardController::class, 'index'])->name('mondash');
+// Route pour afficher le tableau de bord
+Route::get('/mondash', [DashboardController::class, 'index'])
+    ->middleware('auth') // Seuls les utilisateurs connectés peuvent accéder
+    ->name('mondash');
+
+    Route::get('/test-login', function () {
+        $credentials = [
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ];
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('mondash');
+        } else {
+            return 'Échec de la connexion';
+        }
+    });
+
+//Route::get('//', [DashboardController::class, 'index'])->name('mondash');
 // Route::get('/actifs', [DashboardController::class, 'actifs'])->name('actifs');
 Route::get('/utilisateurs', [DashboardController::class, 'utilisateurs'])->name('utilisateurs');
 
@@ -102,6 +124,8 @@ Route::resource('categorie', controller: CategorieController::class);
 
 
 Route::resource('historiques', HistoriqueController::class);
+
+Route::resource('user', controller: UserController::class);
 
 Route::get('/fournisseurs', [FournisseurController::class, 'index'])->name('fournisseurs.index');
 Route::post('/fournisseurs', [FournisseurController::class, 'store'])->name('fournisseurs.store');

@@ -208,7 +208,7 @@
                 </a>
                 <ul class="ml-6 mt-2 space-y-1">
                     <li id="compte-nouveau">
-                        <a href="#" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.nouveau') ? 'bg-blue-100' : '' }}">
+                        <a href="{{ route('user.create') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.nouveau') ? 'bg-blue-100' : '' }}">
                             <i class="bi bi-person-plus mr-2"></i>
                             <span class="link-text">Nouveau Compte</span>
                         </a>

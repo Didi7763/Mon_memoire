@@ -29,6 +29,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'NomCompUser',
+        'StatAdmin',
+        'ListAccApp',
+        'ListPermApp',
     ];
 
     /**
@@ -49,7 +53,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $appends = [
-        'profile_photo_url',
+        'profile_photo_path',
     ];
 
     /**

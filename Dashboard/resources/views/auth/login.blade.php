@@ -12,7 +12,7 @@
             </div>
         @endsession
 
-        <form method="POST" action="{{ route('mondash') }}">
+        <form method="POST" action="{{ route('login.submit') }}">
             @csrf
 
             <div>

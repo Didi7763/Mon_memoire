@@ -10,8 +10,8 @@
         @if($user)
             <!-- Afficher la photo de profil -->
             <div class="mb-6 text-center">
-                @if($user->profile_photo)
-                    <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Photo de profil" class="w-32 h-32 rounded-full mx-auto object-cover shadow-md">
+                @if($user->profile_photo_path)
+                    <img src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="Photo de profil" class="w-32 h-32 rounded-full mx-auto object-cover shadow-md">
                 @else
                     <div class="w-32 h-32 bg-gray-200 rounded-full mx-auto flex items-center justify-center shadow-md">
                         <span class="text-gray-500 text-lg">Aucune photo</span>
@@ -40,8 +40,8 @@
 
                 <!-- Photo de profil -->
                 <div>
-                    <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
-                    <input type="file" name="profile_photo" id="profile_photo"
+                    <label for="profile_photo_path" class="block text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
+                    <input type="file" name="profile_photo_path" id="profile_photo_path"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                 </div>
 
