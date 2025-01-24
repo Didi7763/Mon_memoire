@@ -136,15 +136,15 @@
                         <div class="mt-2 space-y-2">
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ListAccApp[]" value="données" class="form-checkbox" checked>
-                                <span class="ml-2">Actif données</span>
+                                <span class="ml-2">données</span>
                             </label>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ListAccApp[]" value="logiciels" class="form-checkbox" checked>
-                                <span class="ml-2">Actif logiciels</span>
+                                <span class="ml-2">logiciels</span>
                             </label>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ListAccApp[]" value="matériels" class="form-checkbox" checked>
-                                <span class="ml-2">Actif matériels</span>
+                                <span class="ml-2">matériels</span>
                             </label>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ListAccApp[]" value="catégories" class="form-checkbox" checked>
@@ -176,7 +176,11 @@
                             </label>
                             <label class="inline-flex items-center">
                                 <input type="checkbox" name="ListAccApp[]" value="nouveau compte" class="form-checkbox" checked>
-                                <span class="ml-2">Compte</span>
+                                <span class="ml-2">Nouveau Compte</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="ListAccApp[]" value="tous comptes" class="form-checkbox" checked>
+                                <span class="ml-2">Les comptes</span>
                             </label>
                         </div>
                     </div>

@@ -64,6 +64,7 @@ Route::any('/mondash', [DashboardController::class, 'index'])->name('mondash');
 Route::get('donnees.actif-data', [ActifController::class, 'afficherActifs']);
 
 
+
 /*Route::get('/actif-materiel', function () {
     return view('actif.create'); // Affiche la vue sans traitement de données
 })->name('actif.create');
@@ -83,6 +84,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/compte/profil', [UserController::class, 'profil'])->name('compte.profil');
     Route::put('/compte/profil/update', [UserController::class, 'update'])->name('compte.profil.update');
 });
+
+
+// Route pour la méthode update2
+Route::put('/users/{id}', [UserController::class, 'update2'])->name('users.update2');
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

@@ -26,6 +26,26 @@ class LoginController extends Controller
         logger('Tentative de connexion avec les informations : ', $credentials);
 
         if (Auth::attempt($credentials, $request->remember)) {
+
+            // Récupérer l'utilisateur connecté
+            $user = Auth::user();
+
+            // Mettre à jour le statut en ligne
+            $user->is_online = true;
+            if ($user instanceof User) {
+                $user->save();
+            }
+            // Décoder les fichiers JSON ListAccApp et ListPermApp
+        $ListAccApp = json_decode($user->ListAccApp, true) ?? [];
+        $ListPermApp = json_decode($user->ListPermApp, true) ?? [];
+
+        // Stocker les accès, permissions et photo de profil dans la session
+        session([
+            'ListAccApp' => $ListAccApp,
+            'ListPermApp' => $ListPermApp,
+            'profile_photo_path' => $user->profile_photo_path, // Lien de la photo de profil
+        ]);
+
             logger('Connexion réussie pour l\'utilisateur : ' . Auth::user()->email);
             $request->session()->regenerate();
             return redirect()->route('mondash');
@@ -40,6 +60,13 @@ class LoginController extends Controller
     // Déconnexion
     public function logout(Request $request)
     {
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+        $user->is_online = false;
+            if ($user instanceof User) {
+                $user->save();
+            }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -1,3 +1,8 @@
+@php
+    // Récupérer les accès et permissions de l'utilisateur depuis la session
+    $ListAccApp = session('ListAccApp', []);
+    $ListPermApp = session('ListPermApp', []);
+@endphp
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -96,6 +101,7 @@
         }
     </style>
 </head>
+
 <body class="font-quicksand bg-gray-100">
     <!-- Sidebar -->
     <div id="sidebar" class="fixed inset-y-0 left-0 bg-white shadow-lg">
@@ -103,134 +109,174 @@
             <!-- Image CARENA réduite -->
             <img src="{{ asset('images/logo_carena-removebg-preview.png') }}" alt="Logo CARENA" class="w-32 mx-auto">
         </div>
-        <ul class="mt-4 space-y-2">
-            <!-- Tableau de bord -->
-            <li>
-                <a href="{{ route('mondash') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('mondash') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-speedometer2 mr-2"></i>
-                    <span class="link-text">Tableau de bord</span>
-                </a>
-            </li>
+        @php
+        // Récupérer les accès et permissions de l'utilisateur depuis la session
+        $ListAccApp = session('ListAccApp', []);
+        $ListPermApp = session('ListPermApp', []);
+    @endphp
 
-            <!-- Actifs -->
-            <li id="actifs-parent">
-                <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('actif*') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-display mr-2"></i>
-                    <span class="link-text">Actifs</span>
-                </a>
-                <ul class="ml-6 mt-2 space-y-1">
-                    <li id="actifs-donnees">
-                        <a href="{{ route('donnees.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('donnees.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-database mr-2"></i>
-                            <span class="link-text">Actifs de données</span>
-                        </a>
-                    </li>
-                    <li id="actifs-logiciel">
-                        <a href="{{ route('logiciel.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('logiciel.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-terminal mr-2"></i>
-                            <span class="link-text">Actif logiciel</span>
-                        </a>
-                    </li>
-                    <li id="actifs-materiel">
-                        <a href="{{ route('materiel.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('materiel.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-cpu mr-2"></i>
-                            <span class="link-text">Actif matériel</span>
-                        </a>
-                    </li>
-                    <li id="actifs-categorie">
-                        <a href="{{ route('categorie.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('categorie.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-card-checklist mr-2"></i>
-                            <span class="link-text">Catégorie matériel</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+    <ul class="mt-4 space-y-2">
+        <!-- Tableau de bord (toujours visible) -->
+        <li>
+            <a href="{{ route('mondash') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('mondash') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-speedometer2 mr-2"></i>
+                <span class="link-text">Tableau de bord</span>
+            </a>
+        </li>
 
-            <!-- Utilisateur -->
-            <li id="utilisateur-parent">
-                <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('utilisateur*') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-person mr-2"></i>
-                    <span class="link-text">Utilisateur</span>
-                </a>
-                <ul class="ml-6 mt-2 space-y-1">
-                    <li id="utilisateur-employe">
-                        <a href="{{ route('User_Employe.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('User_Employe.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-person-badge mr-2"></i>
-                            <span class="link-text">Employé</span>
-                        </a>
-                    </li>
-                    <li id="utilisateur-service">
-                        <a href="{{ route('User_Service.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('User_Service.*') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-gear mr-2"></i>
-                            <span class="link-text">Service</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+        <!-- Actifs -->
+        @if(in_array('données', $ListAccApp) || in_array('logiciels', $ListAccApp) || in_array('matériels', $ListAccApp) || in_array('catégories', $ListAccApp))
+        <li id="actifs-parent">
+            <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('actif*') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-display mr-2"></i>
+                <span class="link-text">Actifs</span>
+            </a>
+            <ul class="ml-6 mt-2 space-y-1">
+                @if(in_array('données', $ListAccApp))
+                <li id="actifs-donnees">
+                    <a href="{{ route('donnees.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('donnees.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-database mr-2"></i>
+                        <span class="link-text">Actifs de données</span>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('logiciels', $ListAccApp))
+                <li id="actifs-logiciel">
+                    <a href="{{ route('logiciel.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('logiciel.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-terminal mr-2"></i>
+                        <span class="link-text">Actif logiciel</span>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('matériels', $ListAccApp))
+                <li id="actifs-materiel">
+                    <a href="{{ route('materiel.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('materiel.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-cpu mr-2"></i>
+                        <span class="link-text">Actif matériel</span>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('catégories', $ListAccApp))
+                <li id="actifs-categorie">
+                    <a href="{{ route('categorie.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('categorie.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-card-checklist mr-2"></i>
+                        <span class="link-text">Catégorie matériel</span>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </li>
+        @endif
 
-            <!-- Fournisseur -->
-            <li>
-                <a href="{{ route('fournisseurs.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('fournisseurs.*') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-truck mr-2"></i>
-                    <span class="link-text">Fournisseur</span>
-                </a>
-            </li>
+        <!-- Utilisateur -->
+        @if(in_array('employes', $ListAccApp) || in_array('services', $ListAccApp))
+        <li id="utilisateur-parent">
+            <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('utilisateur*') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-person mr-2"></i>
+                <span class="link-text">Utilisateur</span>
+            </a>
+            <ul class="ml-6 mt-2 space-y-1">
+                @if(in_array('employes', $ListAccApp))
+                <li id="utilisateur-employe">
+                    <a href="{{ route('User_Employe.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('User_Employe.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-person-badge mr-2"></i>
+                        <span class="link-text">Employé</span>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('services', $ListAccApp))
+                <li id="utilisateur-service">
+                    <a href="{{ route('User_Service.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('User_Service.*') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-gear mr-2"></i>
+                        <span class="link-text">Service</span>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </li>
+        @endif
 
-            <!-- Attribution -->
-            <li>
-                <a href="{{ route('attributions.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('attributions.index') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-award mr-2"></i>
-                    <span class="link-text">Attribution</span>
-                </a>
-            </li>
+        <!-- Fournisseur -->
+        @if(in_array('fournisseurs', $ListAccApp))
+        <li>
+            <a href="{{ route('fournisseurs.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('fournisseurs.*') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-truck mr-2"></i>
+                <span class="link-text">Fournisseur</span>
+            </a>
+        </li>
+        @endif
 
-            <!-- Maintenance -->
-            <li>
-                <a href="{{ route('maintenance.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('maintenance.*') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-tools mr-2"></i>
-                    <span class="link-text">Maintenance</span>
-                </a>
-            </li>
+        <!-- Attribution -->
+        @if(in_array('attribution', $ListAccApp))
+        <li>
+            <a href="{{ route('attributions.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('attributions.index') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-award mr-2"></i>
+                <span class="link-text">Attribution</span>
+            </a>
+        </li>
+        @endif
 
-            <!-- Historique -->
-            <li>
-                <a href="{{ route('historiques.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('historiques') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-clock-history mr-2"></i>
-                    <span class="link-text">Historique</span>
-                </a>
-            </li>
+        <!-- Maintenance -->
+        @if(in_array('maintenances', $ListAccApp))
+        <li>
+            <a href="{{ route('maintenance.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('maintenance.*') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-tools mr-2"></i>
+                <span class="link-text">Maintenance</span>
+            </a>
+        </li>
+        @endif
 
-            <!-- Compte -->
-            <li id="compte-parent">
-                <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('compte*') ? 'bg-blue-100' : '' }}">
-                    <i class="bi bi-person-circle mr-2"></i>
-                    <span class="link-text">Compte</span>
-                </a>
-                <ul class="ml-6 mt-2 space-y-1">
-                    <li id="compte-nouveau">
-                        <a href="{{ route('user.create') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.nouveau') ? 'bg-blue-100' : '' }}">
-                            <i class="bi bi-person-plus mr-2"></i>
-                            <span class="link-text">Nouveau Compte</span>
-                        </a>
-                    </li>
-                    <li id="compte-profil">
-    <a href="{{ route('compte.profil') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.profil') ? 'bg-blue-100' : '' }}">
-        <i class="bi bi-person-lines-fill mr-2"></i>
-        <span class="link-text">Mon Profil</span>
-    </a>
-</li>
-                                <li id="compte-deconnexion">
-                                            <form action="{{ route('logout') }}" method="POST" class="w-full">
-                @csrf
-                <button type="submit" class="flex items-center  p-2 text-blue-900 hover:bg-blue-50 rounded-lg">
-                    <i class="bi bi-box-arrow-right mr-2"></i>
-                    <span class="link-text">Déconnexion</span>
-                </button>
-            </form>
-                        </li>
-                </ul>
-            </li>
-        </ul>
+        <!-- Historique -->
+        @if(in_array('historiques', $ListAccApp))
+        <li>
+            <a href="{{ route('historiques.index') }}" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('historiques') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-clock-history mr-2"></i>
+                <span class="link-text">Historique</span>
+            </a>
+        </li>
+        @endif
+
+        <!-- Compte (toujours visible) -->
+        <li id="compte-parent">
+            <a href="#" class="flex items-center p-3 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->is('compte*') ? 'bg-blue-100' : '' }}">
+                <i class="bi bi-person-circle mr-2"></i>
+                <span class="link-text">Compte</span>
+            </a>
+            <ul class="ml-6 mt-2 space-y-1">
+                @if(in_array('nouveau compte', $ListAccApp))
+                <li id="compte-nouveau">
+                    <a href="{{ route('user.create') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.nouveau') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-person-plus mr-2"></i>
+                        <span class="link-text">Nouveau Compte</span>
+                    </a>
+                </li>
+                @endif
+                @if(in_array('tous comptes', $ListAccApp))
+                <li id="comptes">
+                    <a href="{{ route('user.index') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.nouveau') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-people-fill"></i>
+                        <span class="link-text">Les comptes</span>
+                    </a>
+                </li>
+                @endif
+                <li id="compte-profil">
+                    <a href="{{ route('compte.profil') }}" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg {{ request()->routeIs('compte.profil') ? 'bg-blue-100' : '' }}">
+                        <i class="bi bi-person-lines-fill mr-2"></i>
+                        <span class="link-text">Mon Profil</span>
+                    </a>
+                </li>
+                <li id="compte-deconnexion">
+                    <form action="{{ route('logout') }}" method="POST" class="w-full">
+                        @csrf
+                        <button type="submit" class="flex items-center p-2 text-blue-900 hover:bg-blue-50 rounded-lg">
+                            <i class="bi bi-box-arrow-right mr-2"></i>
+                            <span class="link-text">Déconnexion</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    </ul>
     </div>
 
     <!-- Right Panel -->
@@ -264,24 +310,38 @@
 
                     <!-- Avatar avec dropdown -->
                     <div x-data="{ open: false }" class="relative group mr-4">
-                        <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="w-10 h-10 rounded-full">
-                        <i class="bi bi-circle-fill text-green-500 absolute top-0 right-0 text-xs"></i>
+                        <!-- Photo de profil -->
+                        @php
+                            // Récupérer l'utilisateur connecté
+                            $user = Auth::user();
+                            // Définir l'URL de l'image de profil ou une image par défaut
+                            $profilePhotoUrl = $user && $user->profile_photo_path ? asset('storage/' . $user->profile_photo_path) : 'https://www.w3schools.com/w3images/avatar2.png';
+                        @endphp
+                        <div class="relative">
+                            <img src="{{ $profilePhotoUrl }}"
+                                 alt="Avatar"
+                                 class="w-10 h-10 rounded-full">
+
+                            <!-- Point vert (statut en ligne) -->
+                            <span class="absolute bottom-8 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                        </div>
+
                         <!-- Icône du dropdown -->
                         <div @mouseenter="open = true" @mouseleave="open = false" class="w-6 h-6 cursor-pointer flex items-center justify-center absolute -left-0.5 top-6 bottom-0 right-0 ml-8">
                             <i class="bi bi-caret-down-fill text-gray-500 text-sm"></i>
                         </div>
+
                         <!-- Liste du dropdown -->
                         <ul x-show="open" @mouseenter="open = true" @mouseleave="open = false" class="absolute top-full mt-2 right-0 w-48 bg-white shadow-lg rounded-lg z-50" x-cloak>
-                            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Nouveau Compte</a></li>
-                            <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Mon Profil</a></li>
+                            <li><a href="{{ route('compte.profil') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Mon Profil</a></li>
                             <li>
                                 <!-- Formulaire de déconnexion -->
-                                    <form action="{{ route('logout') }}" method="POST" class="block w-full">
-                                        @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                            Déconnexion
-                                        </button>
-                                    </form>
+                                <form action="{{ route('logout') }}" method="POST" class="block w-full">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                        Déconnexion
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
