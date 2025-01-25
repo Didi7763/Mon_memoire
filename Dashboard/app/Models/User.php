@@ -68,4 +68,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function attribuer()
+    {
+        return $this->hasMany(Attribuer::class, 'id', 'id');
+    }
 }

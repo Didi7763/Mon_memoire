@@ -6,7 +6,9 @@ use App\Models\Materiel; // Assurez-vous d'importer le modèle Materiel
 use App\Models\Fournisseur;
 use App\Models\Categorie;
 use App\Models\Actif;
+use App\Models\Historique;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MaterielController extends Controller
@@ -43,10 +45,14 @@ class MaterielController extends Controller
             'ComtAct' => 'nullable|string|max:1000',
         ]);
 
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
          // Création de l'actif
          $actif = new Actif();
          $actif->IdAct = $validated['IdAct']; // ID de l'actif, vérifie que cela est unique si nécessaire
          $actif->NomAct = $validated['NomAct'];
+         $actif->type = 'matériel';
          $actif->ComtAct = $validated['ComtAct'] ?? null;
          $actif->save(); // Sauvegarde de l'actif
 
@@ -73,6 +79,14 @@ class MaterielController extends Controller
             $categorie->QteStockMat += $validated['QteMat']; // Ajoute la quantité du matériel
             $categorie->save(); // Sauvegarde la nouvelle quantité
         }
+
+
+        // Création de l'historique
+        $historique = new Historique();
+        $historique->DatAction = now();
+        $historique->IdAct = $actif->IdAct;
+        $historique->DesAction = "L'actif matériel " . $actif->NomAct . " a été ajouté le " . now() . " par " . $user->name;
+        $historique->save(); // Sauvegarde de l'historique
 
         // Redirection avec un message de succès
         return redirect()->route('actif-materiel')
@@ -103,7 +117,8 @@ class MaterielController extends Controller
     public function update(Request $request, $id)
     {
         DB::beginTransaction();
-
+            // Récupérer l'utilisateur connecté
+        $user = Auth::user();
         try {
             // Validation des données
             $request->validate([
@@ -126,6 +141,7 @@ class MaterielController extends Controller
             $materiel->actif->update([
                 'NomAct' => $request->NomAct,
                 'ComtAct' => $request->ComtAct,
+                'type' => 'matériel',
             ]);
 
             // Mettre à jour les données spécifiques au matériel
@@ -139,6 +155,13 @@ class MaterielController extends Controller
                 'IdFour' => $request->IdFour,
                 'RefCatMat' => $request->RefCatMat,
             ]);
+
+            // Création de l'historique
+            $historique = new Historique();
+            $historique->DatAction = now();
+            $historique->IdAct = $materiel->actif->IdAct;
+            $historique->DesAction = "L'actif matériel " . $materiel->actif->NomAct . " a été mis à jour le " . now() . " par " . $user->name;
+            $historique->save(); // Sauvegarde de l'historique
 
             // Confirmer la transaction
             DB::commit();
@@ -161,6 +184,8 @@ class MaterielController extends Controller
     {
         try {
             DB::beginTransaction();
+                // Récupérer l'utilisateur connecté
+                $user = Auth::user();
 
             // Récupérer la catégorie associée au matériel
             $categorie = Categorie::where('RefCatMat', $materiel->RefCatMat)->first();
@@ -173,6 +198,13 @@ class MaterielController extends Controller
                 }
                 $categorie->save();
             }
+
+             // Création de l'historique
+             $historique = new Historique();
+             $historique->DatAction = now();
+             $historique->IdAct = $materiel->actif->IdAct;
+             $historique->DesAction = "L'actif matériel " . $materiel->actif->NomAct . " a été supprimé le " . now() . " par " . $user->name;
+             $historique->save(); // Sauvegarde de l'historique
 
             // Suppression de l'actif associé
             $actif = Actif::where('IdAct', $materiel->IdAct)->first();

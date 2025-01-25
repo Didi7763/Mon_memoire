@@ -24,7 +24,7 @@ class Actif extends Model
 
     // Les champs que vous pouvez remplir en masse
     protected $fillable = [
-        'IdAct', 'NomAct', 'ComtAct'
+        'IdAct', 'NomAct', 'type', 'ComtAct'
     ];
 
     // Définir la relation avec le modèle Donnee
@@ -50,5 +50,16 @@ class Actif extends Model
     {
         return $this->hasMany(Maintenance ::class, 'IdAct', 'IdAct');
         // 'IdAct' dans le modèle Donnee est la clé étrangère, et 'IdAct' dans Actif est la clé primaire
+    }
+
+    public function historiques()
+    {
+        return $this->hasMany(Historique ::class, 'IdAct', 'IdAct');
+        // 'IdAct' dans le modèle Donnee est la clé étrangère, et 'IdAct' dans Actif est la clé primaire
+    }
+
+    public function attribuer()
+    {
+        return $this->hasMany(Attribuer::class, 'IdAct', 'IdAct');
     }
 }

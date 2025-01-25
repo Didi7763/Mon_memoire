@@ -26,9 +26,9 @@ class Attribuer extends Model
     }
 
     // Relation avec le modèle Admin
-    public function admin()
+    public function user()
     {
-        return $this->belongsTo(Admin::class, 'NumAdmin');
+        return $this->belongsTo(User::class, 'id');
     }
 }
 

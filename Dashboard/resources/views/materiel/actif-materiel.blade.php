@@ -1,3 +1,8 @@
+@php
+    // Récupérer les accès et permissions de l'utilisateur depuis la session
+    $ListAccApp = session('ListAccApp', []);
+    $ListPermApp = session('ListPermApp', []);
+@endphp
 @extends('layouts.app')
 
 @section('title')
@@ -97,7 +102,9 @@ Liste des Actifs Matériels
     <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
         <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem] w-[78vw]">
             <h2 class="text-xl font-bold">Liste des Actifs Matériels</h2>
-            <a href="{{ route('materiel.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <a href="{{ route('materiel.create') }}"
+               class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+               onclick="return checkPermission('create')">
                 <i class="bi bi-plus-circle"></i>
                 Ajouter un actif matériel
             </a>
@@ -149,12 +156,19 @@ Liste des Actifs Matériels
                         <td class="p-3">
                             <div class="flex gap-2">
                                 <!-- Bouton "Modifier" plus petit -->
-                                <a href="{{ route('materiel.edit', $materiel->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
+                                <a href="{{ route('materiel.edit', $materiel->id) }}"
+                                   class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors"
+                                   onclick="return checkPermission('edit')">
+                                    Modifier
+                                </a>
                                 <!-- Bouton "Supprimer" plus petit -->
-                                <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
+                                <form action="{{ route('materiel.destroy', $materiel->id) }}" method="POST" onsubmit="return checkPermission('delete') && confirm('Confirmer la suppression ?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">Supprimer</button>
+                                    <button type="submit"
+                                            class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">
+                                        Supprimer
+                                    </button>
                                 </form>
                             </div>
                         </td>
@@ -176,7 +190,7 @@ Liste des Actifs Matériels
     </div>
 </div>
 
-<!-- Script pour gérer le chargeur -->
+<!-- Script pour gérer le chargeur et les permissions -->
 <script>
     // Gestion du chargeur
     setTimeout(() => {
@@ -202,5 +216,15 @@ Liste des Actifs Matériels
             }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
         }, 3000); // Délai initial avant de commencer la transition
     }, 0); // Démarrer immédiatement
+
+    // Fonction pour vérifier les permissions
+    function checkPermission(permission) {
+        const permissions = @json($ListPermApp); // Convertir la liste des permissions en JSON
+        if (!permissions.includes(permission)) {
+            alert("Vous n'avez pas la permission sur cette action.");
+            return false; // Bloquer l'action
+        }
+        return true; // Autoriser l'action
+    }
 </script>
 @endsection

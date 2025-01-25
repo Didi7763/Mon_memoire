@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Donnee;
 use App\Models\Actif;
+use App\Models\Historique;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,10 +42,15 @@ class DonneeController extends Controller
         try {
             DB::beginTransaction();
 
+
+            // Récupérer l'utilisateur connecté
+            $user = Auth::user();
+
                 // Création de l'actif
             $actif = new Actif();
             $actif->IdAct = $validated['IdAct']; // ID de l'actif, vérifie que cela est unique si nécessaire
             $actif->NomAct = $validated['NomAct'];
+            $actif->type = 'donnée';
             $actif->ComtAct = $validated['ComtAct'] ?? null;
             $actif->save(); // Sauvegarde de l'actif
 
@@ -59,7 +66,13 @@ class DonneeController extends Controller
             $donnee->DatMajData = now(); // Utilisation de la date et heure actuelles pour la mise à jour
             $donnee->save(); // Sauvegarde de la donnée
 
-                // Tu pourrais également utiliser la relation entre Actif et Donnee si tu les as définies dans tes modèles
+
+            // Création de l'historique
+            $historique = new Historique();
+            $historique->DatAction = now();
+            $historique->IdAct = $actif->IdAct;
+            $historique->DesAction = "L'actif de donnée " . $actif->NomAct . " a été ajouté le " . now() . " par " . $user->name;
+            $historique->save(); // Sauvegarde de l'historique
 
 
             DB::commit();
@@ -99,6 +112,10 @@ class DonneeController extends Controller
 {
     DB::beginTransaction();
 
+    // Récupérer l'utilisateur connecté
+            $user = Auth::user();
+
+
     try {
         // Récupérer les données
         $donnee = Donnee::with('actif')->findOrFail($id);
@@ -107,6 +124,7 @@ class DonneeController extends Controller
         $donnee->actif->update([
             'NomAct' => $request->NomAct,
             'ComtAct' => $request->ComtAct,
+            'type' => 'donnée',
         ]);
 
         // Mettre à jour les données de la table donnees
@@ -117,6 +135,14 @@ class DonneeController extends Controller
             'NivSensData' => $request->NivSensData,
             'StatData' => $request->StatData,
         ]);
+
+         // Création de l'historique
+         $historique = new Historique();
+         $historique->DatAction = now();
+         $historique->IdAct = $donnee->actif->IdAct;
+         $historique->DesAction = "L'actif de donnée " . $donnee->actif->NomAct . " a été mis à jour le " . now() . " par " . $user->name;
+         $historique->save(); // Sauvegarde de l'historique
+
 
         DB::commit();
 
@@ -130,8 +156,20 @@ class DonneeController extends Controller
 
     public function destroy(Donnee $donnee)
 {
+
+
+
     try {
         DB::beginTransaction();
+
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+         // Création de l'historique
+         $historique = new Historique();
+         $historique->DatAction = now();
+         $historique->IdAct = $donnee->actif->IdAct;
+         $historique->DesAction = "L'actif de donnée " . $donnee->actif->NomAct . " a été supprimé le " . now() . " par " . $user->name;
+         $historique->save(); // Sauvegarde de l'historique
 
         // Suppression de l'actif associé
         $actif = Actif::where('IdAct', $donnee->IdAct)->first();

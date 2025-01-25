@@ -6,6 +6,8 @@ use App\Models\Fournisseur;
 use App\Models\Logiciel;
 use Illuminate\Http\Request;
 use App\Models\Actif;
+use App\Models\Historique;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 class LogicielController extends Controller
 {
@@ -48,13 +50,18 @@ class LogicielController extends Controller
             'IdFour' => 'required|exists:fournisseurs,IdFour',
         ]);
 
+
+
         try {
             DB::beginTransaction();
+                // Récupérer l'utilisateur connecté
+                $user = Auth::user();
 
               // Création de l'actif
               $actif = new Actif();
               $actif->IdAct = $validated['IdAct']; // ID de l'actif, vérifie que cela est unique si nécessaire
               $actif->NomAct = $validated['NomAct'];
+              $actif->type = 'logiciel';
               $actif->ComtAct = $validated['ComtAct'] ?? null;
               $actif->save(); // Sauvegarde de l'actif
 
@@ -70,6 +77,14 @@ class LogicielController extends Controller
             $logiciel->DatExpLog = $validated['DatExpLog'];
             $logiciel->IdFour = $validated['IdFour'];
             $logiciel->save();
+
+
+            // Création de l'historique
+            $historique = new Historique();
+            $historique->DatAction = now();
+            $historique->IdAct = $actif->IdAct;
+            $historique->DesAction = "L'actif logiciel " . $actif->NomAct . " a été ajouté le " . now() . " par " . $user->name;
+            $historique->save(); // Sauvegarde de l'historique
 
             DB::commit();
 
@@ -129,6 +144,8 @@ class LogicielController extends Controller
     public function update(Request $request, $id)
     {
         DB::beginTransaction();
+            // Récupérer l'utilisateur connecté
+            $user = Auth::user();
 
         try {
             // Validation des données
@@ -151,7 +168,9 @@ class LogicielController extends Controller
             // Mettre à jour les données de l'actif associé
             $logiciel->actif->update([
                 'NomAct' => $request->NomAct,
+                'type' => 'logiciel',
                 'ComtAct' => $request->ComtAct,
+
             ]);
 
             // Mettre à jour les données spécifiques au logiciel
@@ -165,6 +184,13 @@ class LogicielController extends Controller
                 'DatExpLog' => $request->DatExpLog,
                 'IdFour' => $request->IdFour,
             ]);
+
+            // Création de l'historique
+            $historique = new Historique();
+            $historique->DatAction = now();
+            $historique->IdAct = $logiciel->actif->IdAct;
+            $historique->DesAction = "L'actif logiciel " . $logiciel->actif->NomAct . " a été mise à jour le " . now() . " par " . $user->name;
+            $historique->save(); // Sauvegarde de l'historique
 
             // Confirmer la transaction
             DB::commit();
@@ -189,6 +215,16 @@ class LogicielController extends Controller
 {
     try {
         DB::beginTransaction();
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+
+         // Création de l'historique
+         $historique = new Historique();
+         $historique->DatAction = now();
+         $historique->IdAct = $logiciel->actif->IdAct;
+         $historique->DesAction = "L'actif logiciel " . $logiciel->actif->NomAct . " a été supprimé le " . now() . " par " . $user->name;
+         $historique->save(); // Sauvegarde de l'historique
+
 
         // Suppression de l'actif associé
         $actif = Actif::where('IdAct', $logiciel->IdAct)->first();

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Maintenance;
 use App\Models\Actif;
 use Illuminate\Http\Request;
+use App\Models\Historique;
+use Illuminate\Support\Facades\Auth;
 
 class MaintenanceController extends Controller
 {
@@ -25,6 +27,9 @@ class MaintenanceController extends Controller
     // Enregistrer un nouvel employé
     public function store(Request $request)
 {
+    // Récupérer l'utilisateur connecté
+    $user = Auth::user();
+
     // Valider les données reçues
     $validated = $request->validate([
         'DesMaint' => 'required|string|max:255', // Description du service
@@ -38,7 +43,14 @@ class MaintenanceController extends Controller
     ]);
 
     // Créer un nouvel enregistrement de maintenance
-    Maintenance::create($validated);
+    $maintenance = Maintenance::create($validated);
+
+    // Création de l'historique
+    $historique = new Historique();
+    $historique->DatAction = now();
+    $historique->IdAct = $maintenance->actif->IdAct;
+    $historique->DesAction = "Une maintenance a été éffectué sur l'actif  " . $maintenance->actif->NomAct . " le " . now() . " par " . $maintenance->NomTechMaint;
+    $historique->save(); // Sauvegarde de l'historique
 
     // Rediriger avec un message de succès
     return redirect()->route('maintenance.index')->with('success', 'Maintenance ajoutée avec succès.');
@@ -80,7 +92,8 @@ class MaintenanceController extends Controller
             'ComtMaint' => 'required|string|max:255',
             'IdAct' => 'required|string|exists:actifs,IdAct', // Clé étrangère vers Service
         ]);
-
+            // Récupérer l'utilisateur connecté
+            $user = Auth::user();
         // Mettre à jour l'employé
         $maintenance->update([
             'NumMaint' => $validated['NumMaint'],
@@ -94,6 +107,14 @@ class MaintenanceController extends Controller
             'IdAct' => $validated['IdAct'],
         ]);
 
+        // Création de l'historique
+        $historique = new Historique();
+        $historique->DatAction = now();
+        $historique->IdAct = $maintenance->actif->IdAct;
+        $historique->DesAction = "La maintenance éffectué sur l'actif  " . $maintenance->actif->NomAct .  " par " . $maintenance->NomTechMaint. " a été modifié le " . now() . " par " .$user->name;
+        $historique->save(); // Sauvegarde de l'historique
+
+
         // Rediriger avec un message de succès
         return redirect()->route('maintenance.index')->with('success', 'Maintenance mis à jour avec succès.');
     }
@@ -101,6 +122,15 @@ class MaintenanceController extends Controller
     // Supprimer un employé
     public function destroy(Maintenance $maintenance)
     {
+         // Récupérer l'utilisateur connecté
+         $user = Auth::user();
+
+         $historique = new Historique();
+        $historique->DatAction = now();
+        $historique->IdAct = $maintenance->actif->IdAct;
+        $historique->DesAction = "La maintenance éffectué sur l'actif  " . $maintenance->actif->NomAct .  " par " . $maintenance->NomTechMaint. " a été supprimé le " . now() . " par " .$user->name;
+        $historique->save(); // Sauvegarde de l'historique
+
         // Supprimer l'employé
         $maintenance->delete();
 

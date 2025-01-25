@@ -29,4 +29,8 @@ class Utilisateur extends Model
     {
         return $this->hasMany(Service::class, 'CodeUser', 'CodeUser');
     }
+    public function attribuer()
+    {
+        return $this->hasMany(Attribuer::class, 'CodeUser', 'CodeUser');
+    }
 }

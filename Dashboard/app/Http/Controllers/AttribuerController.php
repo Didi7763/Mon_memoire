@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Attribuer; // Modèle pour gérer la table des attributions
 use App\Models\Actif; // Modèle pour gérer la table des actifs
 use App\Models\Utilisateur; // Modèle pour gérer la table des utilisateurs
-use App\Models\Admin; // Modèle pour gérer la table des administrateurs
+use App\Models\User; // Modèle pour gérer la table des administrateurs
+use App\Models\Historique;
+use App\Models\Categorie;
+use App\Models\Logiciel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AttribuerController extends Controller
 {
@@ -17,7 +22,7 @@ class AttribuerController extends Controller
      */public function index()
 {
     // Chargez les attributions avec leurs relations et paginez
-    $attributions = Attribuer::with(['actif', 'utilisateur', 'admin'])->paginate(15);
+    $attributions = Attribuer::with(['actif', 'utilisateur', 'user'])->paginate(15);
 
     return view('attributions.index', compact('attributions'));
 }
@@ -28,25 +33,66 @@ class AttribuerController extends Controller
     {
         $actifs = Actif::all();
         $utilisateurs = Utilisateur::all();
-        $admins = Admin::all();
-        return view('attributions.create', compact('actifs', 'utilisateurs', 'admins'));
+        $users = user::all();
+        return view('attributions.create', compact('actifs', 'utilisateurs', 'users'));
     }
 
-     
+
     public function store(Request $request)
-    {
-        // Valider les données du formulaire
-        $request->validate([
-            'IdAct' => 'required|exists:actifs,IdAct', // L'identifiant de l'actif doit exister dans la table `actifs`
-            'CodeUser' => 'required|exists:utilisateurs,CodeUser', // Le code utilisateur doit exister dans la table `utilisateurs`
-            'NumAdmin' => 'required|exists:admins,NumAdmin', // Le numéro de l'admin doit exister dans la table `admins`
-            'DatAttAct' => 'required|date', // La date doit être une date valide
-        ]);
+{
+    // Récupérer l'utilisateur connecté
+    $user = Auth::user();
 
-        // Créer une nouvelle attribution avec les données validées
-        Attribuer::create($request->all());
+    // Valider les données du formulaire
+    $validated = $request->validate([
+        'IdAct' => 'required|exists:actifs,IdAct',
+        'CodeUser' => 'required|exists:utilisateurs,CodeUser',
+        'DatAttAct' => 'required|date',
+    ]);
 
-        // Rediriger vers la liste des attributions avec un message de succès
-        return redirect()->route('attributions.index')->with('success', 'Attribution ajoutée avec succès!');
+    // Créer une nouvelle attribution avec les données validées
+    $attribuer = new Attribuer();
+    $attribuer->IdAct = $validated['IdAct'];
+    $attribuer->CodeUser = $validated['CodeUser'];
+    $attribuer->NumAdmin = $user->id; // Utiliser l'ID de l'utilisateur connecté
+    $attribuer->DatAttAct = $validated['DatAttAct'];
+    $attribuer->save();
+
+    // Récupérer l'actif attribué
+    $actif = Actif::find($validated['IdAct']);
+
+    // Récupérer l'utilisateur
+    $utilisateur = Utilisateur::find($validated['CodeUser']);
+
+    // Vérifier si l'actif est un matériel ou un logiciel
+    if ($actif->type === 'matériel') {
+        // Récupérer la catégorie du matériel
+        $categorie = Categorie::find($actif->IdAct);
+
+        // Diminuer la quantité en stock de 1
+        if ($categorie) {
+            $categorie->QteStockMat -= 1;
+            $categorie->save();
+        }
+    } elseif ($actif->type === 'logiciel') {
+        // Récupérer le logiciel
+        $logiciel = Logiciel::find($actif->IdAct);
+
+        // Diminuer le nombre de licences de 1
+        if ($logiciel) {
+            $logiciel->NbrLicLog -= 1;
+            $logiciel->save();
+        }
     }
+
+    // Création de l'historique
+    $historique = new Historique();
+    $historique->DatAction = now();
+    $historique->IdAct = $validated['IdAct'];
+    $historique->DesAction = "L'actif " . $actif->NomAct . " a été attribué le " . now() . " par " . $user->name . " à " . $utilisateur->NomCompUser;
+    $historique->save();
+
+    // Rediriger vers la liste des attributions avec un message de succès
+    return redirect()->route('attributions.index')->with('success', 'Attribution ajoutée avec succès!');
+}
 }

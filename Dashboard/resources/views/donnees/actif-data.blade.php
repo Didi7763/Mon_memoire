@@ -1,3 +1,8 @@
+@php
+    // Récupérer les accès et permissions de l'utilisateur depuis la session
+    $ListAccApp = session('ListAccApp', []);
+    $ListPermApp = session('ListPermApp', []);
+@endphp
 @extends('layouts.app')
 
 @section('title', 'Liste des Actifs de Données')
@@ -75,7 +80,9 @@
     <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
         <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
             <h2 class="text-xl font-bold">Liste des Actifs de Données</h2>
-            <a href="{{ route('donnees.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <a href="{{ route('donnees.create') }}"
+               class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+               onclick="return checkPermission('create')">
                 <i class="bi bi-plus-circle"></i>
                 Ajouter une donnée
             </a>
@@ -122,11 +129,19 @@
                         <td class="p-3">{{ $donnee->actif->ComtAct }}</td>
                         <td class="p-3">
                             <div class="flex gap-2">
-                                <a href="{{ route('donnees.edit', $donnee->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
-                                <form action="{{ route('donnees.destroy', $donnee->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')">
+                                <a href="{{ route('donnees.edit', $donnee->id) }}"
+                                   class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors"
+                                   onclick="return checkPermission('edit')">
+                                    Modifier
+                                </a>
+
+                                <form action="{{ route('donnees.destroy', $donnee->id) }}" method="POST" onsubmit="return checkPermission('delete') && confirm('Confirmer la suppression ?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">Supprimer</button>
+                                    <button type="submit"
+                                            class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">
+                                        Supprimer
+                                    </button>
                                 </form>
                             </div>
                         </td>
@@ -148,7 +163,7 @@
     </div>
 </div>
 
-<!-- Script pour gérer le chargeur -->
+<!-- Script pour gérer le chargeur et les permissions -->
 <script>
     // Gestion du chargeur
     setTimeout(() => {
@@ -174,5 +189,15 @@
             }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
         }, 3000); // Délai initial avant de commencer la transition
     }, 0); // Démarrer immédiatement
+
+    // Fonction pour vérifier les permissions
+    function checkPermission(permission) {
+        const permissions = @json($ListPermApp); // Convertir la liste des permissions en JSON
+        if (!permissions.includes(permission)) {
+            alert("Vous n'avez pas la permission sur cette action.");
+            return false; // Bloquer l'action
+        }
+        return true; // Autoriser l'action
+    }
 </script>
 @endsection

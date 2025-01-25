@@ -142,6 +142,6 @@ Route::get('/attributions', [AttribuerController::class, 'index'])->name('attrib
 Route::get('/attributions/create', [AttribuerController::class, 'create'])->name('attributions.create');
 Route::post('/attributions', [AttribuerController::class, 'store'])->name('attributions.store');
 
-Route::get('/attributions', [AttributionController::class, 'index'])->name('attributions.index');
+/*Route::get('/attributions', [AttributionController::class, 'index'])->name('attributions.index');
 Route::get('/attributions/create', [AttributionController::class, 'create'])->name('attributions.create');
-Route::post('/attributions', [AttributionController::class, 'store'])->name('attributions.store');
+Route::post('/attributions', [AttributionController::class, 'store'])->name('attributions.store');*/

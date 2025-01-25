@@ -1,3 +1,8 @@
+@php
+    // Récupérer les accès et permissions de l'utilisateur depuis la session
+    $ListAccApp = session('ListAccApp', []);
+    $ListPermApp = session('ListPermApp', []);
+@endphp
 @extends('layouts.app')
 
 @section('title', 'Liste des attributions')
@@ -75,7 +80,9 @@
     <div id="main-content" class="relative" style="min-height: 75vh; display: none; opacity: 0;">
         <div class="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm min-h-[6rem]">
             <h2 class="text-xl font-bold">Liste des attributions</h2>
-            <a href="{{ route('attributions.create') }}" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            <a href="{{ route('attributions.create') }}"
+               class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+               onclick="return checkPermission('create')">
                 <i class="bi bi-plus-circle"></i>
                 Attribuer un actif
             </a>
@@ -88,7 +95,7 @@
                         <th class="text-left p-3">ID</th>
                         <th class="text-left p-3">Actif</th>
                         <th class="text-left p-3">Utilisateur</th>
-                        <th class="text-left p-3">Admin</th>
+                        <th class="text-left p-3">Attribuer par</th>
                         <th class="text-left p-3">Date d'attribution</th>
                         <th class="text-left p-3">Actions</th>
                     </tr>
@@ -98,18 +105,23 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="p-3">{{ $attribution->id }}</td>
                         <td class="p-3">{{ $attribution->actif->NomAct ?? 'N/A' }}</td>
-                        <td class="p-3">{{ $attribution->utilisateur->NomUser ?? 'N/A' }}</td>
-                        <td class="p-3">{{ $attribution->admin->NomAdmin ?? 'N/A' }}</td>
-                        <td class="p-3">{{ $attribution->DatAttAct }}</td>
+                        <td class="p-3">{{ $attribution->utilisateur->NomCompUser ?? 'N/A' }}</td>
+                        <td class="p-3">{{ $attribution->user->name ?? 'N/A' }}</td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($attribution->DatAttAct)->format('d/m/Y') }}</td>
                         <td class="p-3">
                             <div class="flex gap-2">
                                 <!-- Bouton "Modifier" plus petit -->
-                                <a href="{{ route('User_Employe.edit', $attribution->id) }}" class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors">Modifier</a>
+                                <a href="{{ route('attributions.edit', $attribution->id) }}"
+                                   class="px-2 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition-colors"
+                                   onclick="return checkPermission('edit')">
+                                    Modifier
+                                </a>
                                 <!-- Bouton "Supprimer" plus petit -->
-                                <form action="{{ route('User_Employe.destroy', $attribution->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette attribution ?')">
+                                <form action="{{ route('attributions.destroy', $attribution->id) }}" method="POST" onsubmit="return checkPermission('delete') && confirm('Êtes-vous sûr de vouloir supprimer cette attribution ?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">
+                                    <button type="submit"
+                                            class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -127,8 +139,9 @@
     </div>
 </div>
 
-<!-- Script pour gérer le chargeur -->
+<!-- Script pour gérer le chargeur et les permissions -->
 <script>
+    // Gestion du chargeur
     setTimeout(() => {
         const loader = document.getElementById('loader');
         const mainContent = document.getElementById('main-content');
@@ -152,6 +165,15 @@
             }, 1000); // Attendre 1 seconde pour que le chargeur disparaisse
         }, 3000); // Délai initial avant de commencer la transition
     }, 0); // Démarrer immédiatement
-</script>
 
+    // Fonction pour vérifier les permissions
+    function checkPermission(permission) {
+        const permissions = @json($ListPermApp); // Convertir la liste des permissions en JSON
+        if (!permissions.includes(permission)) {
+            alert("Vous n'avez pas la permission sur cette action.");
+            return false; // Bloquer l'action
+        }
+        return true; // Autoriser l'action
+    }
+</script>
 @endsection
