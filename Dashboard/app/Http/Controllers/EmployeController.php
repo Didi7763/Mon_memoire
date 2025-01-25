@@ -6,6 +6,12 @@ use App\Models\Employe;
 use App\Models\Utilisateur;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Models\Attribuer;
+use App\Models\Logiciel;
+use App\Models\Actif;
+use App\Models\Categorie;
+use App\Models\Historique;
+use App\Models\Materiel;
 use Illuminate\Support\Facades\DB;
 
 class EmployeController extends Controller
@@ -123,13 +129,66 @@ try {
             // Trouver l'employé par son ID
             $employe = Employe::findOrFail($id);
 
-            // Trouver l'utilisateur lié au service via le CodeUser
-            $utilisateur = Utilisateur::where('CodeUser', $employe->CodeUser1)->first();
+        // Trouver l'utilisateur lié à l'employé via le CodeUser
+        $utilisateur = Utilisateur::where('CodeUser', $employe->CodeUser1)->first();
+        if (!$utilisateur) {
+            throw new \Exception("L'utilisateur associé à cet employé n'existe pas.");
+        }
 
-            // Si un utilisateur est trouvé, nous le supprimons
-            if ($utilisateur) {
-                $utilisateur->delete();
+        // Récupérer toutes les attributions associées à cet utilisateur
+        $attributions = Attribuer::where('CodeUser', $utilisateur->CodeUser)->get();
+
+        // Parcourir chaque attribution pour incrémenter les quantités
+        foreach ($attributions as $attribution) {
+            // Récupérer l'actif associé à l'attribution
+            $actif = Actif::find($attribution->IdAct);
+            if (!$actif) {
+                throw new \Exception("L'actif associé à cette attribution n'existe pas.");
             }
+
+            // Vérifier si l'actif est un matériel ou un logiciel
+            if ($actif->type === 'matériel') {
+                // Récupérer le matériel associé à l'actif
+                $materiel = Materiel::where('IdAct', $actif->IdAct)->first();
+                if (!$materiel) {
+                    throw new \Exception("Le matériel associé à cet actif n'existe pas.");
+                }
+
+                // Trouver la catégorie du matériel
+                $categorie = Categorie::where('RefCatMat', $materiel->RefCatMat)->first();
+                if (!$categorie) {
+                    throw new \Exception("La catégorie du matériel n'existe pas.");
+                }
+
+                // Incrémenter la quantité en stock de 1
+                $categorie->QteStockMat += 1;
+                $categorie->save();
+
+            } elseif ($actif->type === 'logiciel') {
+                // Récupérer le logiciel associé à l'actif
+                $logiciel = Logiciel::where('IdAct', $actif->IdAct)->first();
+                if (!$logiciel) {
+                    throw new \Exception("Le logiciel associé à cet actif n'existe pas.");
+                }
+
+                // Incrémenter le nombre de licences de 1
+                $logiciel->NbrLicLog += 1;
+                $logiciel->save();
+            }
+
+            // Supprimer l'attribution
+            $attribution->delete();
+
+            // Création de l'historique pour chaque attribution supprimée
+            $historique = new Historique();
+            $historique->DatAction = now();
+            $historique->IdAct = $attribution->IdAct;
+            $historique->DesAction = "L'actif " . $actif->NomAct . " a été rétiré à " . $utilisateur->NomCompUser . " le " . now();
+            $historique->save();
+        }
+
+        // Supprimer l'utilisateur
+        $utilisateur->delete();
 
             // Supprimer l'employé
             $employe->delete();

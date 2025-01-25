@@ -54,18 +54,37 @@
     }
 
     .status-badge {
-        padding: 0.2rem 0.5rem;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin: 0;
-    }
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+}
 
-    .status-creation { background: #e3f2fd; color: #1976d2; }
-    .status-stock { background: #e8f5e9; color: #2e7d32; }
-    .status-supprime { background: #fce4ec; color: #c2185b; }
-    .status-active { background: #fff3e0; color: #f57c00; }
-    .status-obsolete { background: #efebe9; color: #5d4037; }
+.status-interne {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-public {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-discret {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.status-confidentiel {
+    background: #efebe9;
+    color: #5d4037;
+}
+
+.status-default {
+    background: #f5f5f5;
+    color: #757575;
+}
 </style>
 @endsection
 
@@ -97,7 +116,7 @@
                         <th class="text-left p-3">Format</th>
                         <th class="text-left p-3">Source</th>
                         <th class="text-left p-3">Responsable</th>
-                        <th class="text-left p-3">Statut</th>
+                        <th class="text-left p-3">Sensibilté</th>
                         <th class="text-left p-3">Date de réception</th>
                         <th class="text-left p-3">Dernière mise à jour</th>
                         <th class="text-left p-3">Commentaire</th>
@@ -113,15 +132,15 @@
                         <td class="p-3">{{ $donnee->SourceData }}</td>
                         <td class="p-3">{{ $donnee->ResponsabeData }}</td>
                         <td class="p-3">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium
-                                @switch($donnee->StatData)
-                                    @case('en création') bg-blue-100 text-blue-800 @break
-                                    @case('active') bg-orange-100 text-orange-800 @break
-                                    @case('stockée') bg-green-100 text-green-800 @break
-                                    @case('obsolète') bg-gray-100 text-gray-800 @break
-                                    @case('supprimée') bg-pink-100 text-pink-800 @break
+                            <span class="status-badge
+                                @switch($donnee->NivSensData)
+                                    @case('Interne') status-interne @break
+                                    @case('Discrets') status-discret @break
+                                    @case('Public') status-public @break
+                                    @case('Confidentiel') status-confidentiel @break
+                                    @default status-default
                                 @endswitch">
-                                {{ $donnee->StatData }}
+                                {{ $donnee->NivSensData }}
                             </span>
                         </td>
                         <td class="p-3">{{ \Carbon\Carbon::parse($donnee->DatRecpData)->format('d/m/Y') }}</td>

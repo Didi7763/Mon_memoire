@@ -71,6 +71,6 @@ class User extends Authenticatable
 
     public function attribuer()
     {
-        return $this->hasMany(Attribuer::class, 'id', 'id');
+        return $this->hasMany(Attribuer::class, 'NumAdmin', 'id');
     }
 }

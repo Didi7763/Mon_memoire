@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\Actif;
+use App\Models\Categorie;
+use App\Models\Historique;
+use App\Models\Attribuer;
+use App\Models\Materiel;
+use App\Models\Logiciel;
+use App\Models\Utilisateur;
 class UserController extends Controller
 {
     // Afficher le profil de l'utilisateur
@@ -236,6 +242,63 @@ public function update2(Request $request, $id)
 public function destroy($id)
     {
         $user = User::findOrFail($id);
+
+        // Récupérer toutes les attributions associées à cet utilisateur
+        $attributions = Attribuer::where('CodeUser', $user->CodeUser)->get();
+
+        // Parcourir chaque attribution pour incrémenter les quantités
+        foreach ($attributions as $attribution) {
+            // Récupérer l'actif associé à l'attribution
+            $actif = Actif::find($attribution->IdAct);
+            if (!$actif) {
+                throw new \Exception("L'actif associé à cette attribution n'existe pas.");
+            }
+
+            // Vérifier si l'actif est un matériel ou un logiciel
+            if ($actif->type === 'matériel') {
+                // Récupérer le matériel associé à l'actif
+                $materiel = Materiel::where('IdAct', $actif->IdAct)->first();
+                if (!$materiel) {
+                    throw new \Exception("Le matériel associé à cet actif n'existe pas.");
+                }
+
+                // Trouver la catégorie du matériel
+                $categorie = Categorie::where('RefCatMat', $materiel->RefCatMat)->first();
+                if (!$categorie) {
+                    throw new \Exception("La catégorie du matériel n'existe pas.");
+                }
+
+                // Incrémenter la quantité en stock de 1
+                $categorie->QteStockMat += 1;
+                $categorie->save();
+
+            } elseif ($actif->type === 'logiciel') {
+                // Récupérer le logiciel associé à l'actif
+                $logiciel = Logiciel::where('IdAct', $actif->IdAct)->first();
+                if (!$logiciel) {
+                    throw new \Exception("Le logiciel associé à cet actif n'existe pas.");
+                }
+
+                // Incrémenter le nombre de licences de 1
+                $logiciel->NbrLicLog += 1;
+                $logiciel->save();
+            }
+
+
+              // Création de l'historique pour chaque attribution supprimée
+              $historique = new Historique();
+              $historique->DatAction = now();
+              $historique->IdAct = $attribution->IdAct;
+              $historique->DesAction = "L'actif " . $actif->NomAct . " a été rétiré à " . $attribution->utilisateur->NomCompUser . " le " . now();
+              $historique->save();
+
+            // Supprimer l'attribution
+            $attribution->delete();
+
+
+        }
+
+
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'compte supprimé avec succès.');

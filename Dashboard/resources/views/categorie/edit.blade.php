@@ -30,7 +30,7 @@
         gap: 0.5vw;
     }
 
-    input[readonly] {
+    input[readonly],select[readonly] {
         cursor: not-allowed;
         background-color: #f0f0f0; /* Optionnel : Changer l'apparence pour montrer que c'est non modifiable */
     }

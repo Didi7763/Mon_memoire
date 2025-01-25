@@ -12,34 +12,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attribuer', function (Blueprint $table) {
-            // Supprimer la contrainte de clé étrangère pour NumAdmin
-            $table->dropForeign('attribuer_numadmin_foreign');
+            // Ajouter la colonne NumAdmin
+            $table->unsignedBigInteger('NumAdmin');
 
-            // Supprimer la colonne NumAdmin
-            $table->dropColumn('NumAdmin');
-
-            // Ajouter la colonne id (si elle n'existe pas déjà)
-            if (!Schema::hasColumn('attribuer', 'id')) {
-                $table->unsignedBigInteger('id');
-            }
-
-            // Définir id comme clé étrangère vers users
-            $table->foreign('id')->references('id')->on('users');
+            // Définir NumAdmin comme clé étrangère vers la table users
+            $table->foreign('NumAdmin')
+                  ->references('id') // Colonne référencée dans la table users
+                  ->on('users')
+                  ->onDelete('cascade'); // Optionnel : supprimer les enregistrements liés si l'utilisateur est supprimé
         });
     }
 
+    /**
+     * Annule la migration.
+     */
     public function down()
     {
         Schema::table('attribuer', function (Blueprint $table) {
-            // Supprimer la contrainte de clé étrangère pour id
-            $table->dropForeign(['id']);
+            // Supprimer la contrainte de clé étrangère
+            $table->dropForeign(['NumAdmin']);
 
-            // Supprimer la colonne id
-            $table->dropColumn('id');
-
-            // Revenir à NumAdmin
-            $table->unsignedBigInteger('NumAdmin');
-            $table->foreign('NumAdmin')->references('id')->on('users');
+            // Supprimer la colonne NumAdmin
+            $table->dropColumn('NumAdmin');
         });
     }
 };

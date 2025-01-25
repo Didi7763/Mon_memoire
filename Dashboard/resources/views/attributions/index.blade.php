@@ -117,12 +117,13 @@
                                     Modifier
                                 </a>
                                 <!-- Bouton "Supprimer" plus petit -->
-                                <form action="{{ route('attributions.destroy', $attribution->id) }}" method="POST" onsubmit="return checkPermission('delete') && confirm('Êtes-vous sûr de vouloir supprimer cette attribution ?')">
+                                 <!-- Bouton "Supprimer" plus petit -->
+                                 <form action="{{ route('attributions.destroy', $attribution->id) }}" method="POST" onsubmit="return checkPermission('delete') && confirm('Êtes-vous sûr de vouloir supprimer cette attribution ?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
                                             class="px-2 py-1 bg-red-500 text-white rounded-lg text-xs hover:bg-red-600 transition-colors">
-                                        <i class="bi bi-trash"></i>
+                                        Supprimer
                                     </button>
                                 </form>
                             </div>
