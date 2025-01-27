@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Categorie extends Model
 {
+    use Notifiable;
     protected $table = 'categorie_materiels';
     protected $primaryKey = 'RefCatMat';
     public $incrementing = false;
