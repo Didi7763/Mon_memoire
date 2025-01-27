@@ -73,4 +73,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attribuer::class, 'NumAdmin', 'id');
     }
+
+    // Dans User.php
+public function read_notifications()
+{
+    return $this->belongsToMany(GlobalNotification::class, 'notification_user', 'user_id', 'notification_id')
+                ->withPivot('read_at')
+                ->withTimestamps();
+}
 }

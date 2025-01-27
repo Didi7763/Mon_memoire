@@ -145,3 +145,65 @@ Route::post('/attributions', [AttribuerController::class, 'store'])->name('attri
 /*Route::get('/attributions', [AttributionController::class, 'index'])->name('attributions.index');
 Route::get('/attributions/create', [AttributionController::class, 'create'])->name('attributions.create');
 Route::post('/attributions', [AttributionController::class, 'store'])->name('attributions.store');*/
+use App\Http\Controllers\NotificationController;
+/*
+// Route pour marquer toutes les notifications comme lues
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.markAllAsRead')
+    ->middleware('auth'); // Assurez-vous que l'utilisateur est authentifié
+
+// Définir la route pour afficher les détails d'un logiciel
+Route::get('/logiciel/{id}', [LogicielController::class, 'show'])->name('logiciel.actif-logiciel');
+
+
+Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+
+;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read/{notificationId}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+});
+*/
+
+/*Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+Route::post('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
+Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);*/
+/*
+// Notifications
+Route::prefix('/notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+});*/
+
+
+Route::middleware('auth')->group(function () {
+    // Récupérer le nombre de notifications non lues
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])
+        ->name('notifications.unreadCount');
+
+    /// Route pour marquer une notification comme lue
+Route::post('/notifications/mark-as-read/{notificationId}', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.markAsRead');
+
+    // Marquer toutes les notifications comme lues
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.markAllAsRead');
+
+    // Récupérer la liste des notifications
+    Route::get('/layouts', [NotificationController::class, 'index'])
+        ->name('layouts.app');
+});
+

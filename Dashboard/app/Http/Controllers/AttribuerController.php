@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Attribuer; // Modèle pour gérer la table des attributions
 use App\Models\Actif; // Modèle pour gérer la table des actifs
 use App\Models\Utilisateur; // Modèle pour gérer la table des utilisateurs
+use Illuminate\Support\Facades\Auth;
 use App\Models\User; // Modèle pour gérer la table des administrateurs
 use App\Models\Historique;
 use App\Models\Categorie;
 use App\Models\Logiciel;
 use App\Models\Materiel;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\DB;
 
 class AttribuerController extends Controller
