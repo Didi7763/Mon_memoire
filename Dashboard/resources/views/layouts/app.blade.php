@@ -288,12 +288,12 @@
                     </button>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <form class="flex items-center">
-                        <input type="text" placeholder="Rechercher..." class="p-2 border border-gray-300 rounded-l w-48 h-10">
-                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-r h-10 w-12">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </form>
+                    <form action="{{ route('search') }}" method="GET" class="flex items-center">
+    <input type="text" name="query" placeholder="Rechercher..." class="p-2 border border-gray-300 rounded-l w-48 h-10">
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded-r h-10 w-12">
+        <i class="bi bi-search"></i>
+    </button>
+</form>
 
                     <i class="bi bi-brightness-high-fill text-3xl cursor-pointer dark-mode-toggle"></i>
 

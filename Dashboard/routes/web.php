@@ -207,3 +207,24 @@ Route::post('/notifications/mark-as-read/{notificationId}', [NotificationControl
         ->name('layouts.app');
 });
 
+use App\Http\Controllers\SearchController;
+
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+// Actifs
+Route::get('/actifs/{id}', [ActifController::class, 'show'])->name('actifs.show');
+
+// Employés
+Route::get('/employes/{id}', [EmployeController::class, 'show'])->name('employes.show');
+
+// Services
+Route::get('/services/{id}', [ServiceController::class, 'show'])->name('services.show');
+
+// Logiciels
+Route::get('/logiciel/{id}', [LogicielController::class, 'show'])->name('logiciel.show');
+
+// Matériels
+Route::get('/materiel/{id}', [MaterielController::class, 'show'])->name('materiel.show');
+
+// Fournisseurs
+Route::get('/fournisseurs/{id}', [FournisseurController::class, 'show'])->name('fournisseurs.show');

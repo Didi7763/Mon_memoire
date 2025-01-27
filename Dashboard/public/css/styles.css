@@ -226,4 +226,38 @@ body.dark-mode .text-white {
 /* Cibler les fonds en mode sombre */
 body.dark-mode .bg-white {
     background-color: #1e1e1e !important; /* Forcer le fond sombre */
+}/* Ajouter un sélecteur pour les éléments qui ne sont pas encore ciblés */
+body.dark-mode * {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Améliorer la lisibilité des éléments de formulaire */
+body.dark-mode input[type="checkbox"],
+body.dark-mode input[type="radio"] {
+    accent-color: #bb86fc;
+}
+
+/* Ajouter un style pour les éléments qui sont désactivés */
+body.dark-mode:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Améliorer l'apparence des éléments de pagination */
+body.dark-mode .pagination .page-item .page-link {
+    border-radius: 50%;
+}
+
+/* Ajouter un style pour les éléments qui sont en cours de chargement */
+body.dark-mode .loading {
+    animation: loading 1s infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
