@@ -1,58 +1,229 @@
 /* styles.css */
+
+/* Mode sombre global */
 body.dark-mode {
-    background-color: #121212; /* Arrière-plan sombre */
-    color: #ffffff; /* Texte en blanc */
+    background-color: #121212 !important; /* Arrière-plan sombre */
+    color: #ffffff !important; /* Texte en blanc */
 }
 
 /* Cibler la sidebar en mode sombre */
 body.dark-mode #sidebar {
-    background-color: #1e1e1e; /* Arrière-plan sombre pour la sidebar */
-    color: #ffffff; /* Texte en blanc */
+    background-color: #1e1e1e !important; /* Arrière-plan sombre pour la sidebar */
+    color: #ffffff !important; /* Texte en blanc */
 }
 
 /* Cibler les liens dans la sidebar */
 body.dark-mode #sidebar a {
-    color: #bb86fc; /* Couleur des liens en mode sombre */
+    color: #bb86fc !important; /* Couleur des liens en mode sombre */
 }
 
 /* Cibler le panel-right en mode sombre */
 body.dark-mode #right-panel {
-    background-color: #121212; /* Arrière-plan sombre */
-    color: #ffffff; /* Texte en blanc */
+    background-color: #121212 !important; /* Arrière-plan sombre */
+    color: #ffffff !important; /* Texte en blanc */
 }
 
 /* Cibler la navbar en mode sombre */
 body.dark-mode nav {
-    background-color: #1e1e1e; /* Arrière-plan sombre pour la navbar */
-    color: #ffffff; /* Texte en blanc */
+    background-color: #1e1e1e !important; /* Arrière-plan sombre pour la navbar */
+    color: #ffffff !important; /* Texte en blanc */
 }
 
 /* Cibler les boutons en mode sombre */
 body.dark-mode button {
-    background-color: #333333;
-    color: #ffffff;
-    border: 1px solid #555555;
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
 }
 
 /* Cibler les inputs en mode sombre */
 body.dark-mode input,
 body.dark-mode textarea {
-    background-color: #333333;
-    color: #ffffff;
-    border: 1px solid #555555;
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
 }
 
 /* Cibler les cartes ou conteneurs en mode sombre */
 body.dark-mode .card {
-    background-color: #1e1e1e;
-    border: 1px solid #333333;
+    background-color: #1e1e1e !important;
+    border: 1px solid #333333 !important;
 }
 
 /* Cibler les en-têtes en mode sombre */
 body.dark-mode h1,
 body.dark-mode h2,
 body.dark-mode h3 {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
+/* Cibler les boutons dans le tableau en mode sombre */
+body.dark-mode .action-btn {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
+}
 
+/* Cibler les liens dans le tableau en mode sombre */
+body.dark-mode .table-container a {
+    color: #bb86fc !important; /* Couleur des liens en mode sombre */
+}
+
+/* Cibler les boutons "Modifier" et "Supprimer" en mode sombre */
+body.dark-mode .bg-yellow-500 {
+    background-color: #ffc107 !important; /* Couleur jaune pour le bouton Modifier */
+    color: #000000 !important; /* Texte en noir */
+}
+
+body.dark-mode .bg-red-500 {
+    background-color: #dc3545 !important; /* Couleur rouge pour le bouton Supprimer */
+    color: #ffffff !important; /* Texte en blanc */
+}
+
+/* Cibler le tableau en mode sombre */
+body.dark-mode .table-container table {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* Cibler les lignes du tableau en mode sombre */
+body.dark-mode .table-container tr {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* Cibler les cellules du tableau en mode sombre */
+body.dark-mode .table-container td,
+body.dark-mode .table-container th {
+    background-color: #1e1e1e !important; /* Fond sombre pour les cellules */
+    color: #ffffff !important; /* Texte en blanc */
+    border-color: #333333 !important; /* Bordure sombre */
+}
+
+/* Cibler les lignes survolées en mode sombre */
+body.dark-mode .table-container tr:hover {
+    background-color: #333333 !important; /* Fond plus clair au survol */
+    color: #ffffff !important; /* Texte en blanc */
+}
+
+/* Cibler les en-têtes du tableau en mode sombre */
+body.dark-mode .table-container th {
+    background-color: #333333 !important; /* Fond plus foncé pour les en-têtes */
+    color: #ffffff !important; /* Texte en blanc */
+}
+
+/* Cibler les liens dans les cellules du tableau en mode sombre */
+body.dark-mode .table-container td a {
+    color: #bb86fc !important; /* Couleur des liens en mode sombre */
+}
+
+/* Cibler les boutons dans les cellules du tableau en mode sombre */
+body.dark-mode .table-container td button {
+    background-color: #444 !important; /* Fond sombre pour les boutons */
+    color: #fff !important; /* Texte en blanc */
+    border: 1px solid #666 !important; /* Bordure sombre */
+}
+
+body.dark-mode .table-container td button:hover {
+    background-color: #555 !important; /* Fond plus clair au survol */
+}
+
+/* Cibler le chargeur en mode sombre */
+body.dark-mode #loader {
+    border-color: #bb86fc !important; /* Couleur de la bordure du chargeur */
+}
+
+/* Cibler les boîtes en mode sombre */
+body.dark-mode .header-container,
+body.dark-mode .table-container {
+    background-color: #1e1e1e !important;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Cibler les ombres en mode sombre */
+body.dark-mode .shadow-sm {
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Cibler les boutons d'action dans le tableau */
+body.dark-mode .action-buttons .action-btn {
+    background-color: #444 !important;
+    color: #fff !important;
+    border: 1px solid #666 !important;
+}
+
+body.dark-mode .action-buttons .action-btn:hover {
+    background-color: #555 !important;
+}
+
+/* Cibler les liens dans le tableau */
+body.dark-mode .table-container a:hover {
+    color: #dd86fc !important; /* Couleur des liens au survol en mode sombre */
+}
+
+/* Cibler les paginations en mode sombre */
+body.dark-mode .pagination .page-item .page-link {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+    background-color: #555 !important;
+    color: #fff !important;
+    border: 1px solid #777 !important;
+}
+
+/* Cibler les messages d'alerte en mode sombre */
+body.dark-mode .alert {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+/* Cibler les modales en mode sombre */
+body.dark-mode .modal-content {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+    border-color: #333 !important;
+}
+
+body.dark-mode .modal-body {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+/* Cibler les boutons "Ajouter un nouveau service" */
+body.dark-mode .btn-add {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .btn-add:hover {
+    background-color: #444 !important;
+}
+
+/* Cibler les états "En activité" */
+body.dark-mode .status-active {
+    color: #4caf50 !important; /* Couleur verte pour l'état actif */
+}
+
+/* Cibler les icônes dans les boutons */
+body.dark-mode .bi {
+    color: #fff !important; /* Couleur des icônes en blanc */
+}
+
+/* Cibler les textes en mode sombre */
+body.dark-mode .text-white {
+    color: #ffffff !important; /* Forcer le texte en blanc */
+}
+
+/* Cibler les fonds en mode sombre */
+body.dark-mode .bg-white {
+    background-color: #1e1e1e !important; /* Forcer le fond sombre */
+}
