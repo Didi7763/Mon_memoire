@@ -10,7 +10,7 @@ class HistoriqueController extends Controller
 {
     public function index()
     {
-        $historiques = Historique::with('actif')->paginate(10);
+        $historiques = Historique::with('actif')->latest('DatAction')->paginate(10);
         return view('historiques.index', compact('historiques'));
     }
 

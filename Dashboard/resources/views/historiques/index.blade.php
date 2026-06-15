@@ -21,38 +21,32 @@
 
             <!-- Accordéon avec Tailwind et Alpine.js -->
             <div class="space-y-4">
-                <!-- Élément 1 -->
-                <div x-data="{ open: true }" class="border rounded-lg bg-white shadow-md">
-                    <button @click="open = !open" class="w-full p-4 text-left font-semibold bg-gray-100 hover:bg-gray-200 rounded-t-lg flex justify-between items-center">
-                        Un ordinateur a été ajouté
-                        <span class="transform transition-transform" :class="{ 'rotate-180': open }">▼</span>
-                    </button>
-                    <div x-show="open" x-collapse class="p-4 border-t">
-                        L'ordinateur de [Nom de l'utilisateur] a été ajouté le [Date].
+                @forelse($historiques as $index => $historique)
+                    <div x-data="{ open: {{ $index === 0 ? 'true' : 'false' }} }" class="border rounded-lg bg-white shadow-md">
+                        <button @click="open = !open" class="w-full p-4 text-left font-semibold bg-gray-100 hover:bg-gray-200 rounded-t-lg flex justify-between items-center">
+                            <span>
+                                <i class="bi bi-clock-history mr-2 text-blue-500"></i>
+                                Action sur : {{ $historique->actif->NomAct ?? 'Actif inconnu' }}
+                            </span>
+                            <span class="transform transition-transform" :class="{ 'rotate-180': open }">▼</span>
+                        </button>
+                        <div x-show="open" x-collapse class="p-4 border-t text-gray-700">
+                            <p class="mb-2"><strong>Description :</strong> {{ $historique->DesAction }}</p>
+                            <p class="text-sm text-gray-500">
+                                <i class="bi bi-calendar-event mr-1"></i> Date : {{ \Carbon\Carbon::parse($historique->DatAction)->format('d/m/Y à H:i') }}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                @empty
+                    <div class="p-4 text-center text-gray-500 italic">
+                        Aucun historique disponible pour le moment.
+                    </div>
+                @endforelse
+            </div>
 
-                <!-- Élément 2 -->
-                <div x-data="{ open: false }" class="border rounded-lg bg-white shadow-md">
-                    <button @click="open = !open" class="w-full p-4 text-left font-semibold bg-gray-100 hover:bg-gray-200 rounded-t-lg flex justify-between items-center">
-                        Titre 2
-                        <span class="transform transition-transform" :class="{ 'rotate-180': open }">▼</span>
-                    </button>
-                    <div x-show="open" x-collapse class="p-4 border-t">
-                        Contenu du dépliant 2. Tu peux mettre ici des détails sur l'historique.
-                    </div>
-                </div>
-
-                <!-- Élément 3 -->
-                <div x-data="{ open: false }" class="border rounded-lg bg-white shadow-md">
-                    <button @click="open = !open" class="w-full p-4 text-left font-semibold bg-gray-100 hover:bg-gray-200 rounded-t-lg flex justify-between items-center">
-                        Titre 3
-                        <span class="transform transition-transform" :class="{ 'rotate-180': open }">▼</span>
-                    </button>
-                    <div x-show="open" x-collapse class="p-4 border-t">
-                        Contenu du dépliant 3. Tu peux mettre ici des détails sur l'historique.
-                    </div>
-                </div>
+            <!-- Pagination -->
+            <div class="mt-6">
+                {{ $historiques->links() }}
             </div>
         </div>
     </div>

@@ -1,0 +1,25 @@
+﻿
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\UniqueConstraintViolationException 
+
+  SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'MAT-001' for key 'PRIMARY' (Connection: mysql, SQL: insert into `actifs` (`IdAct`, `NomAct`, `ComtAct`, `type`, `updated_at`, `created_at`) values (MAT-001, Dell Latitude 5420, PC de service standard, mat├®riel, 2026-05-17 18:42:10, 2026-05-17 18:42:10))
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:820
+    816Ôûò         // message to include the bindings with SQL, which will make this exception a
+    817Ôûò         // lot more helpful to the developer instead of just the database's errors.
+    818Ôûò         catch (Exception $e) {
+    819Ôûò             if ($this->isUniqueConstraintError($e)) {
+  Ô×£ 820Ôûò                 throw new UniqueConstraintViolationException(
+    821Ôûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    822Ôûò                 );
+    823Ôûò             }
+    824Ôûò
+
+  1   vendor\laravel\framework\src\Illuminate\Database\MySqlConnection.php:53
+      PDOException::("SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'MAT-001' for key 'PRIMARY'")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\MySqlConnection.php:53
+      PDOStatement::execute()
+

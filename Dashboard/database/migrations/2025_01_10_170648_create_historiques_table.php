@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('historiques', function (Blueprint $table) {
             $table->id('NumHist');
-            $table->date('DatAction');
+            $table->dateTime('DatAction');
             $table->text('DesAction');
             $table->string('IdAct');  // Créer la colonne 'IdAct' de type string
             $table->foreign('IdAct')->references('IdAct')->on('actifs')->onDelete('cascade');  // Définir la clé étrangère

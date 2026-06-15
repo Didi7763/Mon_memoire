@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attribuer', function (Blueprint $table) {
-            // Ajouter la colonne NumAdmin
-            $table->unsignedBigInteger('NumAdmin');
+            // Drop old foreign key targeting admins
+            $table->dropForeign(['NumAdmin']);
 
             // Définir NumAdmin comme clé étrangère vers la table users
             $table->foreign('NumAdmin')

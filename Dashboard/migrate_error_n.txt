@@ -1,0 +1,22 @@
+﻿
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] Aucune connexion nÔÇÖa pu ├¬tre ├®tablie car lÔÇÖordinateur cible lÔÇÖa express├®ment refus├®e (Connection: mysql, SQL: select exists (select 1 from information_schema.tables where table_schema = 'memoire' and table_name = 'migrations' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:825
+    821Ôûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    822Ôûò                 );
+    823Ôûò             }
+    824Ôûò 
+  Ô×£ 825Ôûò             throw new QueryException(
+    826Ôûò                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    827Ôûò             );
+    828Ôûò         }
+    829Ôûò     }
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:66
+      PDOException::("SQLSTATE[HY000] [2002] Aucune connexion nÔÇÖa pu ├¬tre ├®tablie car lÔÇÖordinateur cible lÔÇÖa express├®ment refus├®e")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:66
+      PDO::__construct("mysql:host=127.0.0.1;port=3306;dbname=memoire", "root", Object(SensitiveParameterValue), [])
+
